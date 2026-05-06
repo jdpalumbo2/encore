@@ -1,0 +1,51 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Cormorant_Garamond, Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+
+export const metadata: Metadata = {
+  title: "Encore",
+  description: "A curated date concierge for West Palm Beach.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en" className={`${inter.variable} ${cormorant.variable} h-full`}>
+      <body className="min-h-full flex flex-col bg-background text-text">
+        <header className="w-full border-b border-hairline">
+          <div className="mx-auto max-w-[1100px] px-6 py-5 flex items-center">
+            <Link
+              href="/"
+              className="font-display text-2xl text-primary tracking-[0.04em]"
+              style={{ fontWeight: 500 }}
+            >
+              Encore
+            </Link>
+          </div>
+        </header>
+        <main className="flex-1 flex flex-col">{children}</main>
+        <footer className="w-full border-t border-hairline mt-24">
+          <div className="mx-auto max-w-[1100px] px-6 py-6 text-sm text-text-muted">
+            Encore. West Palm Beach.
+          </div>
+        </footer>
+      </body>
+    </html>
+  );
+}

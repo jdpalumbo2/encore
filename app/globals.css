@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand palette (Encore) */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-text: var(--foreground);
+  --color-text-muted: var(--muted-foreground);
+  --color-hairline: var(--border);
+  --color-brass: var(--accent);
+  --color-navy: var(--primary);
+
+  /* shadcn tokens (mapped onto brand) */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+}
+
+:root {
+  --background: #FAF7F2;
+  --surface: #F0EBE3;
+  --foreground: #2C2C2C;
+  --primary: #1A2840;
+  --primary-foreground: #FAF7F2;
+  --secondary: #F0EBE3;
+  --secondary-foreground: #2C2C2C;
+  --muted: #F0EBE3;
+  --muted-foreground: #6B6760;
+  --accent: #B8985A;
+  --accent-foreground: #1A2840;
+  --card: #F0EBE3;
+  --card-foreground: #2C2C2C;
+  --popover: #FAF7F2;
+  --popover-foreground: #2C2C2C;
+  --destructive: #8C2A1F;
+  --border: #E5DFD5;
+  --input: #E5DFD5;
+  --ring: #B8985A;
+  --radius: 4px;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  html {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--primary);
+  }
+}
