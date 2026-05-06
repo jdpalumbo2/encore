@@ -1,2 +1,233 @@
-// Populated in Phase 1.
-export {};
+import type { Experience, Restaurant } from "./types";
+
+export const restaurants: Restaurant[] = [
+  {
+    id: "buccan",
+    name: "Buccan",
+    neighborhood: "Palm Beach",
+    cuisine: "Small plates, contemporary American",
+    priceTier: "$$$",
+    vibe: ["lively", "sceney", "foodie"],
+    blurb:
+      "Clay Conley's small-plates room on the island. Walls of conversation, a kitchen that doesn't miss, and a list that runs from short-rib empanadas to whatever the daily crudo happens to be.",
+    bestFor:
+      "Loud, fun nights with someone who orders the second bottle. Not the move for a quiet first date.",
+    dressCode: "Smart casual. A linen shirt, a good belt, no jacket required.",
+    parking: "Valet on Bradley Place. Street parking after 8 if you're feeling lucky.",
+    reservationNote: "Books out two weeks ahead. Tuesday and Wednesday are the soft spots.",
+  },
+  {
+    id: "milos",
+    name: "Estiatorio Milos",
+    neighborhood: "West Palm Beach",
+    cuisine: "Greek seafood",
+    priceTier: "$$$$",
+    vibe: ["classic", "waterfront", "foodie", "romantic"],
+    blurb:
+      "Costas Spiliadis' Greek seafood temple on the Intracoastal. Whole fish on ice, a wine list with real depth, the kind of room where a quiet table by the window does most of the work for you.",
+    bestFor: "Anniversaries. Birthdays. The night you've been meaning to have for a month.",
+    dressCode: "Jacket recommended. No jeans on the dinner side.",
+    parking: "Valet at the Square. Easy.",
+    reservationNote: "A week or two out. Window tables go first; ask for one when you book.",
+  },
+  {
+    id: "maison-carlos",
+    name: "Maison Carlos",
+    neighborhood: "West Palm Beach",
+    cuisine: "French / Italian",
+    priceTier: "$$$",
+    vibe: ["intimate", "romantic", "quiet", "old-world"],
+    blurb:
+      "Carlos Rohm's twelve-table dining room a block off Clematis. He seats you himself, the menu is short, and the wine pours are honest.",
+    bestFor: "Second or third dates. The room rewards quiet conversation.",
+    dressCode: "A blazer earns a smile. Not required.",
+    parking: "Small lot behind the building, free after 6.",
+    reservationNote: "Call directly. The reservation system isn't always current.",
+  },
+  {
+    id: "cafe-boulud",
+    name: "Café Boulud",
+    neighborhood: "Palm Beach",
+    cuisine: "French",
+    priceTier: "$$$$",
+    vibe: ["classic", "romantic", "foodie", "intimate"],
+    blurb:
+      "Daniel Boulud's Palm Beach outpost, set inside the Brazilian Court courtyard. Polished, classical, the kind of plate-up that makes the table go quiet for a beat.",
+    bestFor: "When you want to look like you know what you're doing without trying to prove it.",
+    dressCode: "Resort-elegant. Jacket optional. No shorts after 6.",
+    parking: "Valet at the hotel. Tip the second time, not the first.",
+    reservationNote: "Courtyard tables in season. Worth the upcharge if the weather cooperates.",
+  },
+  {
+    id: "cafe-leurope",
+    name: "Café L'Europe",
+    neighborhood: "Palm Beach",
+    cuisine: "Continental, French",
+    priceTier: "$$$$",
+    vibe: ["classic", "romantic", "jazz", "old-world"],
+    blurb:
+      "Two rooms, candlelight, and a piano that's been playing since the eighties. The chicken pot pie is famous for a reason.",
+    bestFor: "Someone who appreciates a place that hasn't changed and isn't going to.",
+    dressCode: "Jacket strongly preferred. They will lend you one.",
+    parking: "Valet on South County Road.",
+    reservationNote: "Ask for Table 14, the corner banquette by the piano.",
+  },
+  {
+    id: "sourbon",
+    name: "Sourbon",
+    neighborhood: "West Palm Beach",
+    cuisine: "Modern American, cocktails",
+    priceTier: "$$$",
+    vibe: ["modern", "lively", "intimate"],
+    blurb:
+      "Plant-walled cocktail room on Clematis with a small but sharp kitchen, and a quieter speakeasy upstairs. Order the spritz, then ask about the upstairs.",
+    bestFor: "An after-dinner drink that becomes the night.",
+    dressCode: "Anything sharp. No flip-flops, no shorts.",
+    parking: "Banyan garage, two blocks east.",
+    reservationNote: "Walk-ins fine downstairs. Upstairs is by ask.",
+  },
+  {
+    id: "fern",
+    name: "Fern",
+    neighborhood: "West Palm Beach (Warehouse District)",
+    cuisine: "Farm-to-table, contemporary",
+    priceTier: "$$$",
+    vibe: ["modern", "foodie", "lively"],
+    blurb:
+      "Brick-and-graffiti room in the Warehouse District where the menu changes weekly and the kitchen leans hard on what came in that morning.",
+    bestFor: "Someone who likes to be told what to order and why.",
+    dressCode: "Anything you'd wear to a gallery opening.",
+    parking: "Lot on site. Easy in, easy out.",
+    reservationNote: "A few days out. The chef's counter is the move if you can get it.",
+  },
+  {
+    id: "blind-monk",
+    name: "The Blind Monk",
+    neighborhood: "West Palm Beach",
+    cuisine: "Wine bar, small plates",
+    priceTier: "$$",
+    vibe: ["intimate", "quiet", "romantic"],
+    blurb:
+      "Wine bar with an enormous list, a serious cheese case, and a patio that catches the breeze in the right months.",
+    bestFor: "The first hour. Or the last hour, depending on how the night goes.",
+    dressCode: "Casual. Linen and loafers.",
+    parking: "Street on Belvedere. Easy.",
+    reservationNote: "A patio table for two on a Thursday is a soft ask.",
+  },
+  {
+    id: "grato",
+    name: "Grato",
+    neighborhood: "West Palm Beach",
+    cuisine: "Italian, wood-fired",
+    priceTier: "$$$",
+    vibe: ["classic", "foodie", "intimate"],
+    blurb:
+      "Clay Conley's Italian on South Dixie. Wood-fired oven, a pasta program that's quietly one of the best in the county, and a room that hums without shouting.",
+    bestFor: "Easy nights. Three courses, two glasses, home before eleven.",
+    dressCode: "Smart casual. A pressed shirt.",
+    parking: "Lot adjacent. Plenty of room.",
+    reservationNote: "A few days ahead. The booth in the back gets the best service.",
+  },
+  {
+    id: "okeechobee-steak",
+    name: "Okeechobee Steak House",
+    neighborhood: "West Palm Beach",
+    cuisine: "Steakhouse",
+    priceTier: "$$$",
+    vibe: ["classic", "old-world", "lively"],
+    blurb:
+      "1947, family-run, the steakhouse the rest of the county measures itself against. Bone-in ribeye, iceberg wedge, a Manhattan that arrives properly cold.",
+    bestFor: "Someone who appreciates a place that earned its reputation the long way.",
+    dressCode: "Whatever you'd wear to a nice dinner. Jacket plays.",
+    parking: "Free lot. Comically large.",
+    reservationNote: "Saturdays book a week out. Wednesdays are the locals' night.",
+  },
+  {
+    id: "pink-steak",
+    name: "Pink Steak",
+    neighborhood: "West Palm Beach",
+    cuisine: "Modern steakhouse",
+    priceTier: "$$$$",
+    vibe: ["sceney", "modern", "lively"],
+    blurb:
+      "Julien Gremaud's modern steakhouse off Dixie. Pink leather, a bar scene at seven, and a wagyu situation that's worth the upcharge.",
+    bestFor: "The night that wants a little volume.",
+    dressCode: "Sharp. Sport coat lands well.",
+    parking: "Valet out front. Self-parking around the corner.",
+    reservationNote: "Friday and Saturday tight. Sundays surprisingly soft.",
+  },
+  {
+    id: "bice",
+    name: "BiCE Ristorante",
+    neighborhood: "Palm Beach (Worth Avenue)",
+    cuisine: "Italian",
+    priceTier: "$$$$",
+    vibe: ["classic", "old-world", "foodie"],
+    blurb:
+      "Worth Avenue institution. Veal Milanese the size of the plate, a room that's been packed for thirty years, and a maître d' who remembers names.",
+    bestFor: "Old-world, by-the-book Italian. Reliable in the best sense.",
+    dressCode: "Jacket. Tie if you're so inclined; nobody will blink either way.",
+    parking: "Valet on Worth. The Worth Avenue lot is two blocks east.",
+    reservationNote: "Worth Avenue tables fill in season. Off-season, walk in at 6.",
+  },
+];
+
+export const experiences: Experience[] = [
+  {
+    id: "motunui-sunset",
+    name: "Sunset Sail on the Motunui",
+    type: "cruise",
+    priceTier: "$$$",
+    vibe: ["waterfront", "romantic", "coastal"],
+    blurb:
+      "Ninety minutes on a luxury catamaran out of Sailfish Marina, sunset over the Intracoastal, the kind of light photographs don't quite catch.",
+    bestFor: "Before dinner. The ride sets the tone, the dinner finishes the sentence.",
+    duration: "90 to 120 minutes",
+    pairsWellWith: "Before dinner anywhere on the island or downtown",
+    logistics:
+      "Sailfish Marina, Singer Island. Boards 30 minutes prior. BYOB allowed; they pour the glasses.",
+  },
+  {
+    id: "mimosas-mansions",
+    name: "Mimosas, Mansions & Megayachts cruise",
+    type: "cruise",
+    priceTier: "$$",
+    vibe: ["waterfront", "lively", "coastal", "classic"],
+    blurb:
+      "A daytime ninety-minute cruise along the Palm Beach waterfront. Trumps and Kennedys and Lauders, mimosas in hand, narrated by someone who knows the families.",
+    bestFor: "Late morning into a long lunch.",
+    duration: "90 minutes",
+    pairsWellWith: "Before a Worth Avenue lunch or an early dinner",
+    logistics:
+      "Departs from the West Palm Beach waterfront. Arrive twenty minutes early. Hat and sunglasses, even in winter.",
+  },
+  {
+    id: "norton",
+    name: "Norton Museum of Art",
+    type: "museum",
+    priceTier: "$$",
+    vibe: ["quiet", "classic", "intimate"],
+    blurb:
+      "Foster + Partners renovation, an O'Keeffe, a Pollock, a sculpture garden you'll wish was twice the size. Thursday evenings are the move.",
+    bestFor:
+      "Before dinner, when she mentioned she likes museums and you'd like to find out what she means.",
+    duration: "60 to 90 minutes",
+    pairsWellWith: "Before dinner in West Palm Beach proper",
+    logistics:
+      "Open late on Thursdays, free admission after 5pm. South Dixie at Cranesnest.",
+  },
+  {
+    id: "worth-avenue-stroll",
+    name: "Worth Avenue evening stroll",
+    type: "walk",
+    priceTier: "$$",
+    vibe: ["classic", "romantic", "quiet"],
+    blurb:
+      "Gallery windows, a stop for espresso, the side vias most people miss. No reservation, no plan, just the avenue at its quietest.",
+    bestFor: "After dinner on the island. A walk that says you know the place.",
+    duration: "30 to 45 minutes",
+    pairsWellWith: "After a BiCE, Boulud, or L'Europe dinner",
+    logistics:
+      "No booking. Park at the Worth Avenue lot, or walk from your dinner. Espresso at Pizza al Fresco's bar if you need a stop.",
+  },
+];
