@@ -18,8 +18,15 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Encore",
-  description: "A curated date concierge for West Palm Beach.",
+  metadataBase: new URL("https://encore.local"),
+  title: {
+    default: "Encore",
+    template: "%s · Encore",
+  },
+  description: "Plan a night in West Palm Beach. By invitation.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
