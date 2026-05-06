@@ -11,6 +11,7 @@ export default function ResultsPage() {
   const [packages, setPackages] = useState<Package[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasIntake, setHasIntake] = useState(true);
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -33,7 +34,8 @@ export default function ResultsPage() {
 
     const intakeRaw = sessionStorage.getItem("encore.intake");
     if (!intakeRaw) {
-      router.replace("/plan");
+      setHasIntake(false);
+      setLoading(false);
       return;
     }
 
@@ -41,7 +43,8 @@ export default function ResultsPage() {
     try {
       intake = JSON.parse(intakeRaw) as IntakeAnswers;
     } catch {
-      router.replace("/plan");
+      setHasIntake(false);
+      setLoading(false);
       return;
     }
 
@@ -85,10 +88,14 @@ export default function ResultsPage() {
     );
   }
 
+  if (!hasIntake) {
+    return <MissingBrief />;
+  }
+
   if (error) {
     return (
       <section className="mx-auto w-full max-w-[640px] px-6 py-24 text-center">
-        <p className="font-display text-3xl text-primary" style={{ fontWeight: 500 }}>
+        <p className="font-display font-medium text-3xl text-primary">
           Try that again.
         </p>
         <p className="font-sans text-text-muted mt-3 max-w-[480px] mx-auto">
@@ -97,8 +104,7 @@ export default function ResultsPage() {
         <div className="mt-8">
           <Link
             href="/plan"
-            className="inline-flex items-center justify-center bg-brass text-primary px-6 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-[#A8884A] transition-colors"
-            style={{ borderRadius: "2px" }}
+            className="inline-flex items-center justify-center bg-brass text-primary px-6 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
           >
             Back to the brief
           </Link>
@@ -115,14 +121,11 @@ export default function ResultsPage() {
         <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
           Three options
         </p>
-        <h1
-          className="font-display text-3xl sm:text-4xl text-primary mt-4 leading-tight"
-          style={{ fontWeight: 500 }}
-        >
+        <h1 className="font-display font-medium text-3xl sm:text-4xl text-primary mt-4 leading-tight">
           Pick the night you&rsquo;d like to have.
         </h1>
         <p className="font-sans text-text-muted mt-3 max-w-[560px]">
-          Three different reads on the brief. Tap one to see the evening in full.
+          Three different reads on the brief. Pick one for the full evening.
         </p>
       </div>
 
@@ -135,7 +138,7 @@ export default function ResultsPage() {
       <div className="mt-12">
         <Link
           href="/plan"
-          className="font-sans text-sm text-text-muted hover:text-primary transition-colors"
+          className="font-sans text-sm text-text-muted hover:text-primary transition-colors rounded-sm"
         >
           &larr; Adjust the brief
         </Link>
@@ -149,14 +152,11 @@ function PackageCard({ pkg }: { pkg: Package }) {
     <Link
       href={`/package/${pkg.id}`}
       className={cn(
-        "group flex flex-col bg-background border border-hairline p-7",
+        "group flex flex-col bg-background border border-hairline p-7 rounded-sm",
         "hover:border-primary transition-colors",
       )}
     >
-      <h2
-        className="font-display text-2xl text-primary leading-tight"
-        style={{ fontWeight: 500 }}
-      >
+      <h2 className="font-display font-medium text-2xl text-primary leading-tight">
         {pkg.title}
       </h2>
       <p className="font-display italic text-text-muted text-base mt-2 leading-snug">
@@ -188,7 +188,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
         {pkg.restaurant.vibe.slice(0, 3).map((v) => (
           <span
             key={v}
-            className="font-sans text-[11px] uppercase tracking-[0.12em] text-brass border border-brass/60 px-2 py-1"
+            className="font-sans text-[11px] uppercase tracking-[0.12em] text-brass border border-brass/60 px-2 py-1 rounded-sm"
           >
             {v}
           </span>
@@ -202,5 +202,29 @@ function PackageCard({ pkg }: { pkg: Package }) {
         </p>
       </div>
     </Link>
+  );
+}
+
+function MissingBrief() {
+  return (
+    <section className="mx-auto w-full max-w-[640px] px-6 py-24 text-center">
+      <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
+        Nothing to show
+      </p>
+      <p className="font-display font-medium text-3xl text-primary mt-4 leading-tight">
+        We need a brief first.
+      </p>
+      <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
+        Five quick questions and you&rsquo;ll have three nights to pick from.
+      </p>
+      <div className="mt-8">
+        <Link
+          href="/plan"
+          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+        >
+          Start the brief
+        </Link>
+      </div>
+    </section>
   );
 }

@@ -115,8 +115,20 @@ export async function POST(req: Request) {
     return jsonError(400, "Couldn't read the brief.");
   }
 
-  if (!answers?.herDescription || !answers?.vibe || !answers?.budget) {
+  if (
+    !answers?.herDescription ||
+    !answers?.when ||
+    !answers?.vibe ||
+    !answers?.budget
+  ) {
     return jsonError(400, "The brief is missing a few details.");
+  }
+
+  if (answers.herDescription.length > 2000 || (answers.avoid?.length ?? 0) > 2000) {
+    return jsonError(400, "The brief is too long. Trim it back.");
+  }
+  if (answers.when.length > 200) {
+    return jsonError(400, "The brief is too long. Trim it back.");
   }
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

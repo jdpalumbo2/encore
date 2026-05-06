@@ -2,44 +2,50 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import type { Package } from "@/lib/types";
+import { useParams } from "next/navigation";
+import type { Experience, Package } from "@/lib/types";
+
+type LoadState =
+  | { kind: "loading" }
+  | { kind: "missing" }
+  | { kind: "notfound" }
+  | { kind: "ready"; pkg: Package };
 
 export default function PackagePage() {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
-  const [pkg, setPkg] = useState<Package | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [state, setState] = useState<LoadState>({ kind: "loading" });
 
   useEffect(() => {
     const raw = sessionStorage.getItem("encore.packages");
     if (!raw) {
-      router.replace("/plan");
+      setState({ kind: "missing" });
       return;
     }
     try {
       const list = JSON.parse(raw) as Package[];
       const found = list.find((p) => p.id === params.id);
       if (!found) {
-        router.replace("/results");
+        setState({ kind: "notfound" });
         return;
       }
-      setPkg(found);
+      setState({ kind: "ready", pkg: found });
+      document.title = `${found.title} · Encore`;
     } catch {
-      router.replace("/plan");
-    } finally {
-      setLoaded(true);
+      setState({ kind: "missing" });
     }
-  }, [params.id, router]);
+  }, [params.id]);
 
-  if (!loaded) return null;
-  if (!pkg) return null;
+  if (state.kind === "loading") return null;
+  if (state.kind === "missing") return <MissingState />;
+  if (state.kind === "notfound") return <NotFoundState />;
+
+  const pkg = state.pkg;
 
   return (
     <article className="mx-auto w-full max-w-[720px] px-6 pt-12 pb-24">
       <Link
         href="/results"
-        className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted hover:text-primary transition-colors"
+        className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted hover:text-primary transition-colors rounded-sm py-1"
       >
         &larr; The other two
       </Link>
@@ -48,10 +54,7 @@ export default function PackagePage() {
         <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
           {pkg.title}
         </p>
-        <h1
-          className="font-display text-4xl sm:text-5xl text-primary mt-4 leading-[1.05] tracking-[-0.005em]"
-          style={{ fontWeight: 500 }}
-        >
+        <h1 className="font-display font-medium text-4xl sm:text-5xl text-primary mt-4 leading-[1.05]">
           {pkg.headline}
         </h1>
       </header>
@@ -63,11 +66,8 @@ export default function PackagePage() {
       </Section>
 
       <Section label="Where">
-        <div className="border border-hairline p-6">
-          <h3
-            className="font-display text-2xl text-primary leading-tight"
-            style={{ fontWeight: 500 }}
-          >
+        <div className="border border-hairline p-6 rounded-sm">
+          <h3 className="font-display font-medium text-2xl text-primary leading-tight">
             {pkg.restaurant.name}
           </h3>
           <p className="font-sans text-sm text-text-muted mt-1">
@@ -89,12 +89,9 @@ export default function PackagePage() {
       </Section>
 
       {pkg.experience && (
-        <Section label={`And ${beforeOrAfter(pkg.experience.pairsWellWith)}`}>
-          <div className="border border-hairline p-6">
-            <h3
-              className="font-display text-2xl text-primary leading-tight"
-              style={{ fontWeight: 500 }}
-            >
+        <Section label={experienceSectionLabel(pkg.experience)}>
+          <div className="border border-hairline p-6 rounded-sm">
+            <h3 className="font-display font-medium text-2xl text-primary leading-tight">
               {pkg.experience.name}
             </h3>
             <p className="font-sans text-sm text-text-muted mt-1">
@@ -119,7 +116,7 @@ export default function PackagePage() {
       </Section>
 
       <Section label="Two things to ask her about">
-        <ul className="space-y-3">
+        <ul className="space-y-3 list-none pl-0">
           {pkg.conversationStarters.map((s, i) => (
             <li
               key={i}
@@ -138,14 +135,13 @@ export default function PackagePage() {
       <div className="mt-16 flex flex-col items-stretch gap-4">
         <Link
           href={`/confirm?packageId=${pkg.id}`}
-          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-[#A8884A] transition-colors text-center"
-          style={{ borderRadius: "2px" }}
+          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors text-center rounded-sm"
         >
           Book this evening &middot; {pkg.priceEstimate}
         </Link>
         <Link
           href="/results"
-          className="font-sans text-sm text-text-muted hover:text-primary transition-colors text-center"
+          className="font-sans text-sm text-text-muted hover:text-primary transition-colors text-center rounded-sm py-1"
         >
           See the other two
         </Link>
@@ -171,9 +167,61 @@ function Section({
   );
 }
 
-function beforeOrAfter(pairs: string): string {
-  const lower = pairs.toLowerCase();
-  if (lower.startsWith("before")) return "before";
-  if (lower.startsWith("after")) return "after";
-  return "around it";
+function experienceSectionLabel(exp: Experience): string {
+  const lower = exp.pairsWellWith.toLowerCase();
+  if (lower.includes("after")) return "And after";
+  if (lower.includes("before")) return "And before";
+  if (exp.type === "walk" || exp.type === "cocktails") return "And after";
+  return "And before";
+}
+
+function MissingState() {
+  return (
+    <section className="mx-auto w-full max-w-[640px] px-6 py-24 text-center">
+      <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
+        Nothing to show
+      </p>
+      <p className="font-display font-medium text-3xl text-primary mt-4 leading-tight">
+        We need a brief first.
+      </p>
+      <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
+        Five quick questions and you&rsquo;ll have three nights to pick from.
+      </p>
+      <div className="mt-8">
+        <Link
+          href="/plan"
+          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+        >
+          Start the brief
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function NotFoundState() {
+  return (
+    <section className="mx-auto w-full max-w-[640px] px-6 py-24 text-center">
+      <p className="font-display font-medium text-3xl text-primary leading-tight">
+        That one isn&rsquo;t in the set.
+      </p>
+      <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
+        Pick from the three on offer, or start a fresh brief.
+      </p>
+      <div className="mt-8 flex items-center justify-center gap-4">
+        <Link
+          href="/results"
+          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+        >
+          Back to the three
+        </Link>
+        <Link
+          href="/plan"
+          className="font-sans text-sm text-text-muted hover:text-primary transition-colors rounded-sm py-1"
+        >
+          New brief
+        </Link>
+      </div>
+    </section>
+  );
 }

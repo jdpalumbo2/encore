@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useState, useTransition, type KeyboardEvent } from "react";
 import type { IntakeAnswers } from "@/lib/types";
 import { cn } from "@/lib/cn";
 
@@ -17,8 +17,8 @@ const VIBE_OPTIONS: { value: Vibe; label: string; sub: string }[] = [
 ];
 
 const BUDGET_OPTIONS: { value: Budget; label: string; sub: string }[] = [
-  { value: "comfortable", label: "Comfortable", sub: "$150 to $250 per person" },
-  { value: "elevated", label: "Elevated", sub: "$250 to $450 per person" },
+  { value: "comfortable", label: "Comfortable", sub: "$150–$250 per person" },
+  { value: "elevated", label: "Elevated", sub: "$250–$450 per person" },
   { value: "no-ceiling", label: "No ceiling", sub: "Make it count." },
 ];
 
@@ -27,7 +27,6 @@ export default function PlanPage() {
   const [step, setStep] = useState(1);
   const [pending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [herDescription, setHerDescription] = useState("");
   const [when, setWhen] = useState("");
@@ -61,14 +60,15 @@ export default function PlanPage() {
       avoid: avoid.trim() || undefined,
     };
     setSubmitting(true);
-    setError(null);
-    try {
-      sessionStorage.setItem("encore.intake", JSON.stringify(answers));
-      sessionStorage.removeItem("encore.packages");
-      router.push("/results");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something didn't take.");
-      setSubmitting(false);
+    sessionStorage.setItem("encore.intake", JSON.stringify(answers));
+    sessionStorage.removeItem("encore.packages");
+    router.push("/results");
+  };
+
+  const onTextKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && canAdvance) {
+      e.preventDefault();
+      next();
     }
   };
 
@@ -79,19 +79,19 @@ export default function PlanPage() {
           {step > 1 ? (
             <button
               onClick={back}
-              className="hover:text-primary transition-colors"
+              className="hover:text-primary transition-colors py-1 rounded-sm"
               type="button"
               disabled={submitting}
             >
               &larr; Back
             </button>
           ) : (
-            <Link href="/" className="hover:text-primary transition-colors">
+            <Link href="/" className="hover:text-primary transition-colors py-1 rounded-sm">
               &larr; Home
             </Link>
           )}
         </div>
-        <div>
+        <div aria-live="polite">
           {step} of {total}
         </div>
       </div>
@@ -113,7 +113,8 @@ export default function PlanPage() {
               value={herDescription}
               onChange={(e) => setHerDescription(e.target.value)}
               placeholder="She's mid-50s, plays tennis, just got back from Aspen. Reads a lot of fiction. Doesn't drink red."
-              className="w-full min-h-[160px] bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors resize-none"
+              aria-label="Tell us about her"
+              className="w-full min-h-[160px] bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors resize-none rounded-sm"
             />
           </Step>
         )}
@@ -125,60 +126,72 @@ export default function PlanPage() {
               type="text"
               value={when}
               onChange={(e) => setWhen(e.target.value)}
+              onKeyDown={onTextKeyDown}
               placeholder="Saturday night"
-              className="w-full bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors"
+              aria-label="When"
+              className="w-full bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors rounded-sm"
             />
           </Step>
         )}
 
         {step === 3 && (
           <Step lead="What kind of night?" sub="Pick the one closest to it.">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {VIBE_OPTIONS.map((o) => (
-                <button
-                  key={o.value}
-                  type="button"
-                  onClick={() => setVibe(o.value)}
-                  className={cn(
-                    "text-left bg-background border px-5 py-4 transition-colors",
-                    vibe === o.value
-                      ? "border-primary"
-                      : "border-hairline hover:border-text-muted",
-                  )}
-                >
-                  <div className="font-display text-lg text-primary" style={{ fontWeight: 500 }}>
-                    {o.label}
-                  </div>
-                  <div className="font-sans text-sm text-text-muted mt-1">
-                    {o.sub}
-                  </div>
-                </button>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-label="What kind of night">
+              {VIBE_OPTIONS.map((o) => {
+                const selected = vibe === o.value;
+                return (
+                  <button
+                    key={o.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setVibe(o.value)}
+                    className={cn(
+                      "text-left bg-background border px-5 py-4 transition-colors rounded-sm",
+                      selected
+                        ? "border-primary"
+                        : "border-hairline hover:border-text-muted",
+                    )}
+                  >
+                    <div className="font-display font-medium text-lg text-primary">
+                      {o.label}
+                    </div>
+                    <div className="font-sans text-sm text-text-muted mt-1">
+                      {o.sub}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </Step>
         )}
 
         {step === 4 && (
           <Step lead="Budget comfort?" sub="Honest answer; we work better with the truth.">
-            <div className="grid grid-cols-1 gap-3">
-              {BUDGET_OPTIONS.map((o) => (
-                <button
-                  key={o.value}
-                  type="button"
-                  onClick={() => setBudget(o.value)}
-                  className={cn(
-                    "text-left bg-background border px-5 py-4 transition-colors flex items-center justify-between gap-4",
-                    budget === o.value
-                      ? "border-primary"
-                      : "border-hairline hover:border-text-muted",
-                  )}
-                >
-                  <div className="font-display text-lg text-primary" style={{ fontWeight: 500 }}>
-                    {o.label}
-                  </div>
-                  <div className="font-sans text-sm text-text-muted">{o.sub}</div>
-                </button>
-              ))}
+            <div className="grid grid-cols-1 gap-3" role="radiogroup" aria-label="Budget">
+              {BUDGET_OPTIONS.map((o) => {
+                const selected = budget === o.value;
+                return (
+                  <button
+                    key={o.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setBudget(o.value)}
+                    className={cn(
+                      "text-left bg-background border px-5 py-4 transition-colors flex items-center justify-between gap-4 rounded-sm",
+                      selected
+                        ? "border-primary"
+                        : "border-hairline hover:border-text-muted",
+                    )}
+                  >
+                    <div className="font-display font-medium text-lg text-primary">
+                      {o.label}
+                    </div>
+                    <div className="font-sans text-sm text-text-muted">{o.sub}</div>
+                  </button>
+                );
+              })}
             </div>
           </Step>
         )}
@@ -193,15 +206,12 @@ export default function PlanPage() {
               value={avoid}
               onChange={(e) => setAvoid(e.target.value)}
               placeholder="No oysters. Not crazy about loud rooms."
-              className="w-full min-h-[120px] bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors resize-none"
+              aria-label="Anything to avoid"
+              className="w-full min-h-[120px] bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors resize-none rounded-sm"
             />
           </Step>
         )}
       </div>
-
-      {error && (
-        <p className="mt-6 font-sans text-sm text-[#8C2A1F]">{error}</p>
-      )}
 
       <div className="mt-10 flex items-center justify-end">
         {step < total ? (
@@ -210,10 +220,9 @@ export default function PlanPage() {
             onClick={next}
             disabled={!canAdvance}
             className={cn(
-              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] transition-colors",
-              canAdvance ? "hover:bg-[#A8884A]" : "opacity-40 cursor-not-allowed",
+              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] transition-colors rounded-sm",
+              canAdvance ? "hover:bg-brass-hover" : "opacity-40 cursor-not-allowed",
             )}
-            style={{ borderRadius: "2px" }}
           >
             Continue
           </button>
@@ -223,12 +232,11 @@ export default function PlanPage() {
             onClick={submit}
             disabled={submitting}
             className={cn(
-              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] transition-colors",
-              submitting ? "opacity-60 cursor-wait" : "hover:bg-[#A8884A]",
+              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] transition-colors rounded-sm",
+              submitting ? "opacity-60 cursor-wait" : "hover:bg-brass-hover",
             )}
-            style={{ borderRadius: "2px" }}
           >
-            {submitting ? "Curating..." : "Curate the evening"}
+            {submitting ? "One moment…" : "See the three options"}
           </button>
         )}
       </div>
@@ -247,7 +255,7 @@ function Step({
 }) {
   return (
     <div>
-      <h2 className="font-display text-3xl sm:text-4xl text-primary leading-tight" style={{ fontWeight: 500 }}>
+      <h2 className="font-display font-medium text-3xl sm:text-4xl text-primary leading-tight">
         {lead}
       </h2>
       {sub && (

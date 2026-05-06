@@ -21,7 +21,7 @@ export default function Home() {
       <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
         West Palm Beach. By invitation.
       </p>
-      <h1 className="font-display text-4xl sm:text-5xl md:text-6xl text-primary mt-5 leading-[1.05] tracking-[-0.01em]" style={{ fontWeight: 500 }}>
+      <h1 className="font-display font-medium text-4xl sm:text-5xl md:text-6xl text-primary mt-5 leading-[1.05]">
         Plan a night that says you&rsquo;ve been paying attention.
       </h1>
       <p className="font-sans text-lg text-text-muted mt-6 leading-relaxed max-w-[560px]">
@@ -30,8 +30,7 @@ export default function Home() {
       <div className="mt-10">
         <Link
           href="/plan"
-          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-[#A8884A] transition-colors"
-          style={{ borderRadius: "2px" }}
+          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
         >
           Plan the night
         </Link>
