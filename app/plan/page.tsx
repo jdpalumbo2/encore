@@ -51,7 +51,7 @@ export default function PlanPage() {
     if (step > 1) startTransition(() => setStep(step - 1));
   };
 
-  const submit = async () => {
+  const submit = () => {
     if (!vibe || !budget) return;
     const answers: IntakeAnswers = {
       herDescription: herDescription.trim(),
@@ -64,17 +64,7 @@ export default function PlanPage() {
     setError(null);
     try {
       sessionStorage.setItem("encore.intake", JSON.stringify(answers));
-      const res = await fetch("/api/curate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(answers),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || "Curation failed.");
-      }
-      const data = await res.json();
-      sessionStorage.setItem("encore.packages", JSON.stringify(data.packages));
+      sessionStorage.removeItem("encore.packages");
       router.push("/results");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something didn't take.");
