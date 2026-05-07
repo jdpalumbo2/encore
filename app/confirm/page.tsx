@@ -20,7 +20,7 @@ function ConfirmInner() {
       setState({ kind: "missing" });
       return;
     }
-    const rawPkgs = sessionStorage.getItem("encore.packages");
+    const rawPkgs = sessionStorage.getItem("encore.packages.v2");
     if (!rawPkgs) {
       setState({ kind: "missing" });
       return;
@@ -33,7 +33,7 @@ function ConfirmInner() {
         return;
       }
       let when = "";
-      const rawIntake = sessionStorage.getItem("encore.intake");
+      const rawIntake = sessionStorage.getItem("encore.intake.v2");
       if (rawIntake) {
         try {
           const intake = JSON.parse(rawIntake) as { when?: string };
@@ -53,6 +53,8 @@ function ConfirmInner() {
 
   const { pkg, when } = state;
   const whenLine = when || "Tonight at 7:30";
+  const firstStage = pkg.stages[0];
+  const lastStage = pkg.stages[pkg.stages.length - 1];
 
   return (
     <section className="mx-auto w-full max-w-[640px] px-6 pt-20 pb-24">
@@ -60,23 +62,27 @@ function ConfirmInner() {
         Confirmed
       </p>
       <h1 className="font-display font-medium text-5xl text-primary mt-5 leading-[1.05]">
-        Your table is held.
+        Your evening is held.
       </h1>
 
       <div className="mt-12 border border-hairline p-7 rounded-sm">
         <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
-          {pkg.title}
+          {pkg.archetypeName}
         </p>
-        <h2 className="font-display font-medium text-2xl text-primary mt-3 leading-tight">
-          {pkg.restaurant.name}
-        </h2>
-        <p className="font-sans text-text-muted mt-1">
-          {pkg.restaurant.neighborhood}
-        </p>
+        {firstStage && (
+          <>
+            <h2 className="font-display font-medium text-2xl text-primary mt-3 leading-tight">
+              {firstStage.venue.name}
+            </h2>
+            <p className="font-sans text-text-muted mt-1">
+              {firstStage.venue.neighborhood}
+            </p>
+          </>
+        )}
         <p className="font-sans text-text mt-5">{whenLine}</p>
-        {pkg.experience && (
+        {pkg.stages.length > 1 && lastStage && (
           <p className="font-sans text-text-muted text-sm mt-2">
-            With {pkg.experience.name}.
+            Ends with {lastStage.venue.name}.
           </p>
         )}
       </div>
@@ -84,7 +90,10 @@ function ConfirmInner() {
       <p className="font-sans text-text-muted mt-8 leading-relaxed">
         Everything you need is on the previous page. Read it once on the way over.
       </p>
-      <p className="font-display italic text-text-muted mt-2">Have fun.</p>
+      <p className="font-sans text-xs text-text-muted mt-3 italic">
+        A 7% concierge fee is included and will appear itemized on your bill at the venue.
+      </p>
+      <p className="font-display italic text-text-muted mt-4">Have fun.</p>
 
       <div className="mt-12">
         <Link

@@ -60,8 +60,8 @@ export default function PlanPage() {
       avoid: avoid.trim() || undefined,
     };
     setSubmitting(true);
-    sessionStorage.setItem("encore.intake", JSON.stringify(answers));
-    sessionStorage.removeItem("encore.packages");
+    sessionStorage.setItem("encore.intake.v2", JSON.stringify(answers));
+    sessionStorage.removeItem("encore.packages.v2");
     router.push("/results");
   };
 

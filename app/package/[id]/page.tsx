@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import type { Experience, Package } from "@/lib/types";
+import type { Package, PackageStage } from "@/lib/types";
+import { formatPriceEstimate, formatStageOrder, stageLabel } from "@/lib/format";
 
 type LoadState =
   | { kind: "loading" }
@@ -16,7 +17,7 @@ export default function PackagePage() {
   const [state, setState] = useState<LoadState>({ kind: "loading" });
 
   useEffect(() => {
-    const raw = sessionStorage.getItem("encore.packages");
+    const raw = sessionStorage.getItem("encore.packages.v2");
     if (!raw) {
       setState({ kind: "missing" });
       return;
@@ -29,7 +30,7 @@ export default function PackagePage() {
         return;
       }
       setState({ kind: "ready", pkg: found });
-      document.title = `${found.title} · Encore`;
+      document.title = `${found.archetypeName} · Encore`;
     } catch {
       setState({ kind: "missing" });
     }
@@ -52,11 +53,16 @@ export default function PackagePage() {
 
       <header className="mt-10">
         <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
-          {pkg.title}
+          {pkg.archetypeName}
         </p>
         <h1 className="font-display font-medium text-4xl sm:text-5xl text-primary mt-4 leading-[1.05]">
           {pkg.headline}
         </h1>
+        <div className="mt-5">
+          <span className="inline-flex font-sans text-[12px] uppercase tracking-[0.14em] text-brass border border-brass/60 px-3 py-1.5 rounded-sm">
+            {pkg.signal}
+          </span>
+        </div>
       </header>
 
       <Section label="The evening">
@@ -65,54 +71,27 @@ export default function PackagePage() {
         </p>
       </Section>
 
-      <Section label="Where">
-        <div className="border border-hairline p-6 rounded-sm">
-          <h3 className="font-display font-medium text-2xl text-primary leading-tight">
-            {pkg.restaurant.name}
-          </h3>
-          <p className="font-sans text-sm text-text-muted mt-1">
-            {pkg.restaurant.neighborhood} &middot; {pkg.restaurant.cuisine} &middot;{" "}
-            {pkg.restaurant.priceTier}
-          </p>
-          <p className="font-display italic text-text mt-4 leading-relaxed">
-            {pkg.restaurant.blurb}
-          </p>
-          <p className="font-sans text-sm text-text-muted mt-4 leading-relaxed">
-            {pkg.restaurant.bestFor}
-          </p>
-          {pkg.restaurant.reservationNote && (
-            <p className="font-sans text-xs text-text-muted mt-4 italic">
-              {pkg.restaurant.reservationNote}
-            </p>
-          )}
+      <Section label="The sequence">
+        <div className="mt-2">
+          {pkg.stages.map((stage, i) => (
+            <div key={stage.order}>
+              <StageBlock stage={stage} />
+              {i < pkg.stages.length - 1 && stage.transition && (
+                <div className="my-7 flex items-start justify-center gap-2 max-w-[420px] mx-auto">
+                  <span
+                    className="text-brass leading-none mt-[6px]"
+                    aria-hidden="true"
+                  >
+                    &bull;
+                  </span>
+                  <p className="font-display italic text-text-muted text-sm text-center leading-relaxed">
+                    {stage.transition}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-      </Section>
-
-      {pkg.experience && (
-        <Section label={experienceSectionLabel(pkg.experience)}>
-          <div className="border border-hairline p-6 rounded-sm">
-            <h3 className="font-display font-medium text-2xl text-primary leading-tight">
-              {pkg.experience.name}
-            </h3>
-            <p className="font-sans text-sm text-text-muted mt-1">
-              {pkg.experience.duration}
-            </p>
-            <p className="font-display italic text-text mt-4 leading-relaxed">
-              {pkg.experience.blurb}
-            </p>
-            <p className="font-sans text-sm text-text-muted mt-4 leading-relaxed">
-              {pkg.experience.logistics}
-            </p>
-          </div>
-        </Section>
-      )}
-
-      <Section label="What to wear">
-        <p className="font-sans text-text">{pkg.dressCode}</p>
-      </Section>
-
-      <Section label="Getting there">
-        <p className="font-sans text-text">{pkg.parking}</p>
       </Section>
 
       <Section label="Two things to ask her about">
@@ -132,12 +111,21 @@ export default function PackagePage() {
         <p className="font-sans text-text-muted">{pkg.dontBringUp}</p>
       </Section>
 
+      <Section label="What this evening costs">
+        <p className="font-display font-medium text-2xl text-primary">
+          {formatPriceEstimate(pkg.priceEstimate)}
+        </p>
+        <p className="font-sans text-xs text-text-muted mt-2 italic">
+          {pkg.priceEstimate.conciergeFeeNote}
+        </p>
+      </Section>
+
       <div className="mt-16 flex flex-col items-stretch gap-4">
         <Link
           href={`/confirm?packageId=${pkg.id}`}
           className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors text-center rounded-sm"
         >
-          Book this evening &middot; {pkg.priceEstimate}
+          Book this evening &middot; {formatPriceEstimate(pkg.priceEstimate)}
         </Link>
         <Link
           href="/results"
@@ -167,12 +155,44 @@ function Section({
   );
 }
 
-function experienceSectionLabel(exp: Experience): string {
-  const lower = exp.pairsWellWith.toLowerCase();
-  if (lower.includes("after")) return "And after";
-  if (lower.includes("before")) return "And before";
-  if (exp.type === "walk" || exp.type === "cocktails") return "And after";
-  return "And before";
+function StageBlock({ stage }: { stage: PackageStage }) {
+  const venue = stage.venue;
+  const practical = [venue.dressCode, venue.parking].filter(Boolean).join(" · ");
+  return (
+    <div className="border border-hairline p-6 rounded-sm">
+      <div className="flex items-baseline gap-3">
+        <span className="font-sans text-xs tracking-[0.18em] text-brass">
+          {formatStageOrder(stage.order)}
+        </span>
+        <span className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+          {stageLabel(stage.kind)}
+        </span>
+        <span className="font-sans text-xs text-text-muted ml-auto">
+          {stage.timeOfEvening}
+        </span>
+      </div>
+      <h3 className="font-display font-medium text-2xl text-primary leading-tight mt-3">
+        {venue.name}
+      </h3>
+      <p className="font-sans text-sm text-text-muted mt-1">
+        {venue.neighborhood} &middot; {venue.priceTier} &middot; {venue.typicalDuration}
+      </p>
+      <p className="font-display italic text-text-muted mt-4 leading-relaxed">
+        {stage.why}
+      </p>
+      <p className="font-sans text-sm text-text-muted mt-3 leading-relaxed">
+        {venue.blurb}
+      </p>
+      {practical && (
+        <p className="font-sans text-xs text-text-muted mt-4">{practical}</p>
+      )}
+      {venue.reservationNote && (
+        <p className="font-sans text-xs text-text-muted mt-2 italic">
+          {venue.reservationNote}
+        </p>
+      )}
+    </div>
+  );
 }
 
 function MissingState() {
@@ -185,7 +205,7 @@ function MissingState() {
         We need a brief first.
       </p>
       <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
-        Five quick questions and you&rsquo;ll have three nights to pick from.
+        Five quick questions and you&rsquo;ll have three evenings to pick from.
       </p>
       <div className="mt-8">
         <Link

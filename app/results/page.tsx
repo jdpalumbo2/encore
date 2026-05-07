@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { IntakeAnswers, Package } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { formatPriceEstimate, formatShape } from "@/lib/format";
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function ResultsPage() {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
 
-    const cachedRaw = sessionStorage.getItem("encore.packages");
+    const cachedRaw = sessionStorage.getItem("encore.packages.v2");
     if (cachedRaw) {
       try {
         const cached = JSON.parse(cachedRaw) as Package[];
@@ -32,7 +33,7 @@ export default function ResultsPage() {
       }
     }
 
-    const intakeRaw = sessionStorage.getItem("encore.intake");
+    const intakeRaw = sessionStorage.getItem("encore.intake.v2");
     if (!intakeRaw) {
       setHasIntake(false);
       setLoading(false);
@@ -62,7 +63,7 @@ export default function ResultsPage() {
           );
         }
         const data = (await res.json()) as { packages: Package[] };
-        sessionStorage.setItem("encore.packages", JSON.stringify(data.packages));
+        sessionStorage.setItem("encore.packages.v2", JSON.stringify(data.packages));
         setPackages(data.packages);
       } catch (e) {
         setError(
@@ -82,7 +83,7 @@ export default function ResultsPage() {
     return (
       <section className="mx-auto w-full max-w-[720px] px-6 py-32 text-center">
         <p className="font-display italic text-text-muted text-2xl animate-pulse">
-          Crafting three options&hellip;
+          Designing three evenings&hellip;
         </p>
       </section>
     );
@@ -119,13 +120,13 @@ export default function ResultsPage() {
     <section className="mx-auto w-full max-w-[1100px] px-6 pt-16 pb-24">
       <div>
         <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
-          Three options
+          Three evenings
         </p>
         <h1 className="font-display font-medium text-3xl sm:text-4xl text-primary mt-4 leading-tight">
-          Pick the night you&rsquo;d like to have.
+          Three different reads on the night.
         </h1>
         <p className="font-sans text-text-muted mt-3 max-w-[560px]">
-          Three different reads on the brief. Pick one for the full evening.
+          Pick one to see the full sequence: rooms, pacing, what to ask her about.
         </p>
       </div>
 
@@ -148,6 +149,7 @@ export default function ResultsPage() {
 }
 
 function PackageCard({ pkg }: { pkg: Package }) {
+  const firstStage = pkg.stages[0];
   return (
     <Link
       href={`/package/${pkg.id}`}
@@ -157,46 +159,40 @@ function PackageCard({ pkg }: { pkg: Package }) {
       )}
     >
       <h2 className="font-display font-medium text-2xl text-primary leading-tight">
-        {pkg.title}
+        {pkg.archetypeName}
       </h2>
-      <p className="font-display italic text-text-muted text-base mt-2 leading-snug">
+      <p className="font-sans text-[11px] uppercase tracking-[0.18em] text-text-muted mt-3">
+        {formatShape(pkg.stages)}
+      </p>
+
+      <p className="font-display italic text-text text-base mt-5 leading-snug">
         {pkg.headline}
       </p>
 
-      <div className="mt-6 border-t border-hairline pt-5">
-        <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
-          Where
-        </p>
-        <p className="font-sans text-text mt-2">
-          <span className="font-semibold">{pkg.restaurant.name}</span>{" "}
-          <span className="text-text-muted">
-            &middot; {pkg.restaurant.neighborhood}
-          </span>
-        </p>
+      <div className="mt-5">
+        <span className="inline-flex font-sans text-[11px] uppercase tracking-[0.14em] text-brass border border-brass/60 px-3 py-1.5 rounded-sm">
+          {pkg.signal}
+        </span>
       </div>
 
-      {pkg.experience && (
-        <div className="mt-5">
+      {firstStage && (
+        <div className="mt-6 border-t border-hairline pt-5">
           <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
-            And
+            Starts at
           </p>
-          <p className="font-sans text-text mt-2">{pkg.experience.name}</p>
+          <p className="font-sans text-text mt-2">
+            <span className="font-semibold">{firstStage.venue.name}</span>{" "}
+            <span className="text-text-muted">
+              &middot; {firstStage.venue.neighborhood}
+            </span>
+          </p>
         </div>
       )}
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {pkg.restaurant.vibe.slice(0, 3).map((v) => (
-          <span
-            key={v}
-            className="font-sans text-[11px] uppercase tracking-[0.12em] text-brass border border-brass/60 px-2 py-1 rounded-sm"
-          >
-            {v}
-          </span>
-        ))}
-      </div>
-
       <div className="mt-auto pt-7 flex items-center justify-between">
-        <p className="font-sans text-sm text-text-muted">{pkg.priceEstimate}</p>
+        <p className="font-sans text-sm text-text-muted">
+          {formatPriceEstimate(pkg.priceEstimate)}
+        </p>
         <p className="font-sans text-sm font-semibold text-primary group-hover:text-brass transition-colors">
           See the evening &rarr;
         </p>
@@ -215,7 +211,7 @@ function MissingBrief() {
         We need a brief first.
       </p>
       <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
-        Five quick questions and you&rsquo;ll have three nights to pick from.
+        Five quick questions and you&rsquo;ll have three evenings to pick from.
       </p>
       <div className="mt-8">
         <Link
