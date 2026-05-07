@@ -1,5 +1,18 @@
 export type PriceTier = "$$" | "$$$" | "$$$$";
 
+export type VenueCategory =
+  | "restaurant"
+  | "bar"
+  | "cafe"
+  | "museum"
+  | "gallery"
+  | "garden"
+  | "walk"
+  | "water"
+  | "bookstore"
+  | "sport"
+  | "venue";
+
 export type VibeTag =
   | "classic"
   | "lively"
@@ -12,47 +25,78 @@ export type VibeTag =
   | "quiet"
   | "jazz"
   | "coastal"
-  | "foodie";
+  | "foodie"
+  | "cultural"
+  | "outdoor"
+  | "active"
+  | "contemplative"
+  | "literary";
 
-export interface Restaurant {
+export interface Venue {
   id: string;
   name: string;
+  category: VenueCategory;
   neighborhood: string;
-  cuisine: string;
   priceTier: PriceTier;
   vibe: VibeTag[];
   blurb: string;
   bestFor: string;
-  dressCode: string;
-  parking: string;
+  dressCode?: string;
+  parking?: string;
   reservationNote?: string;
+  typicalDuration: string;
 }
 
-export interface Experience {
+export type StageKind =
+  | "cocktails"
+  | "dinner"
+  | "nightcap"
+  | "coffee"
+  | "brunch"
+  | "walk"
+  | "cultural"
+  | "activity"
+  | "water"
+  | "browse"
+  | "show";
+
+export interface PackageStage {
+  order: number;
+  kind: StageKind;
+  venueId: string;
+  venue: Venue;
+  timeOfEvening: string;
+  why: string;
+  transition?: string;
+}
+
+export interface Archetype {
   id: string;
   name: string;
-  type: "cruise" | "museum" | "walk" | "gallery" | "cocktails" | "show";
-  priceTier: PriceTier;
-  vibe: VibeTag[];
-  blurb: string;
+  description: string;
+  shape: StageKind[];
+  signal: string;
   bestFor: string;
-  duration: string;
-  pairsWellWith: string;
-  logistics: string;
+  intensity: "low" | "medium" | "high";
+  timeOfDay: "morning" | "daytime" | "evening" | "flexible";
 }
 
 export interface Package {
   id: string;
-  title: string;
+  archetypeId: string;
+  archetypeName: string;
   headline: string;
-  restaurant: Restaurant;
-  experience?: Experience;
+  signal: string;
+  stages: PackageStage[];
   narrative: string;
-  dressCode: string;
-  parking: string;
   conversationStarters: string[];
   dontBringUp: string;
-  priceEstimate: string;
+  priceEstimate: {
+    low: number;
+    high: number;
+    perPerson: boolean;
+    conciergeFeeNote: string;
+  };
 }
 
 export interface IntakeAnswers {

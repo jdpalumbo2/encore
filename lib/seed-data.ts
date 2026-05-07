@@ -1,11 +1,12 @@
-import type { Experience, Restaurant } from "./types";
+import type { Archetype, Venue } from "./types";
 
-export const restaurants: Restaurant[] = [
+export const venues: Venue[] = [
+  // ── Restaurants ────────────────────────────────────────────────
   {
     id: "buccan",
     name: "Buccan",
+    category: "restaurant",
     neighborhood: "Palm Beach",
-    cuisine: "Small plates, contemporary American",
     priceTier: "$$$",
     vibe: ["lively", "sceney", "foodie"],
     blurb:
@@ -15,12 +16,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Smart casual. A linen shirt, a good belt, no jacket required.",
     parking: "Valet on Bradley Place. Street parking after 8 if you're feeling lucky.",
     reservationNote: "Books out two weeks ahead. Tuesday and Wednesday are the soft spots.",
+    typicalDuration: "2 hours",
   },
   {
     id: "milos",
     name: "Estiatorio Milos",
+    category: "restaurant",
     neighborhood: "West Palm Beach",
-    cuisine: "Greek seafood",
     priceTier: "$$$$",
     vibe: ["classic", "waterfront", "foodie", "romantic"],
     blurb:
@@ -29,12 +31,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Jacket recommended. No jeans on the dinner side.",
     parking: "Valet at the Square. Easy.",
     reservationNote: "A week or two out. Window tables go first; ask for one when you book.",
+    typicalDuration: "2 hours",
   },
   {
     id: "maison-carlos",
     name: "Maison Carlos",
+    category: "restaurant",
     neighborhood: "West Palm Beach",
-    cuisine: "French / Italian",
     priceTier: "$$$",
     vibe: ["intimate", "romantic", "quiet", "old-world"],
     blurb:
@@ -43,12 +46,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "A blazer earns a smile. Not required.",
     parking: "Small lot behind the building, free after 6.",
     reservationNote: "Call directly. The reservation system isn't always current.",
+    typicalDuration: "2 hours",
   },
   {
     id: "cafe-boulud",
     name: "Café Boulud",
+    category: "restaurant",
     neighborhood: "Palm Beach",
-    cuisine: "French",
     priceTier: "$$$$",
     vibe: ["classic", "romantic", "foodie", "intimate"],
     blurb:
@@ -57,12 +61,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Resort-elegant. Jacket optional. No shorts after 6.",
     parking: "Valet at the hotel. Tip the second time, not the first.",
     reservationNote: "Courtyard tables in season. Worth the upcharge if the weather cooperates.",
+    typicalDuration: "2 hours",
   },
   {
     id: "cafe-leurope",
     name: "Café L'Europe",
+    category: "restaurant",
     neighborhood: "Palm Beach",
-    cuisine: "Continental, French",
     priceTier: "$$$$",
     vibe: ["classic", "romantic", "jazz", "old-world"],
     blurb:
@@ -71,26 +76,28 @@ export const restaurants: Restaurant[] = [
     dressCode: "Jacket strongly preferred. They will lend you one.",
     parking: "Valet on South County Road.",
     reservationNote: "Ask for Table 14, the corner banquette by the piano.",
+    typicalDuration: "2 hours",
   },
   {
     id: "sourbon",
     name: "Sourbon",
+    category: "restaurant",
     neighborhood: "West Palm Beach",
-    cuisine: "Modern American, cocktails",
     priceTier: "$$$",
     vibe: ["modern", "lively", "intimate"],
     blurb:
-      "Plant-walled cocktail room on Clematis with a small but sharp kitchen, and a quieter speakeasy upstairs. Order the spritz, then ask about the upstairs.",
-    bestFor: "An after-dinner drink that becomes the night.",
+      "Plant-walled cocktail room on Clematis with a small but sharp kitchen. Order the spritz; the menu is short on purpose.",
+    bestFor: "An early dinner that wants to keep going.",
     dressCode: "Anything sharp. No flip-flops, no shorts.",
     parking: "Banyan garage, two blocks east.",
-    reservationNote: "Walk-ins fine downstairs. Upstairs is by ask.",
+    reservationNote: "Walk-ins fine on weeknights.",
+    typicalDuration: "90 minutes",
   },
   {
     id: "fern",
     name: "Fern",
+    category: "restaurant",
     neighborhood: "West Palm Beach (Warehouse District)",
-    cuisine: "Farm-to-table, contemporary",
     priceTier: "$$$",
     vibe: ["modern", "foodie", "lively"],
     blurb:
@@ -99,26 +106,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Anything you'd wear to a gallery opening.",
     parking: "Lot on site. Easy in, easy out.",
     reservationNote: "A few days out. The chef's counter is the move if you can get it.",
-  },
-  {
-    id: "blind-monk",
-    name: "The Blind Monk",
-    neighborhood: "West Palm Beach",
-    cuisine: "Wine bar, small plates",
-    priceTier: "$$",
-    vibe: ["intimate", "quiet", "romantic"],
-    blurb:
-      "Wine bar with an enormous list, a serious cheese case, and a patio that catches the breeze in the right months.",
-    bestFor: "The first hour. Or the last hour, depending on how the night goes.",
-    dressCode: "Casual. Linen and loafers.",
-    parking: "Street on Belvedere. Easy.",
-    reservationNote: "A patio table for two on a Thursday is a soft ask.",
+    typicalDuration: "2 hours",
   },
   {
     id: "grato",
     name: "Grato",
+    category: "restaurant",
     neighborhood: "West Palm Beach",
-    cuisine: "Italian, wood-fired",
     priceTier: "$$$",
     vibe: ["classic", "foodie", "intimate"],
     blurb:
@@ -127,12 +121,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Smart casual. A pressed shirt.",
     parking: "Lot adjacent. Plenty of room.",
     reservationNote: "A few days ahead. The booth in the back gets the best service.",
+    typicalDuration: "90 minutes",
   },
   {
     id: "okeechobee-steak",
     name: "Okeechobee Steak House",
+    category: "restaurant",
     neighborhood: "West Palm Beach",
-    cuisine: "Steakhouse",
     priceTier: "$$$",
     vibe: ["classic", "old-world", "lively"],
     blurb:
@@ -141,12 +136,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Whatever you'd wear to a nice dinner. Jacket plays.",
     parking: "Free lot. Comically large.",
     reservationNote: "Saturdays book a week out. Wednesdays are the locals' night.",
+    typicalDuration: "2 hours",
   },
   {
     id: "pink-steak",
     name: "Pink Steak",
+    category: "restaurant",
     neighborhood: "West Palm Beach",
-    cuisine: "Modern steakhouse",
     priceTier: "$$$$",
     vibe: ["sceney", "modern", "lively"],
     blurb:
@@ -155,12 +151,13 @@ export const restaurants: Restaurant[] = [
     dressCode: "Sharp. Sport coat lands well.",
     parking: "Valet out front. Self-parking around the corner.",
     reservationNote: "Friday and Saturday tight. Sundays surprisingly soft.",
+    typicalDuration: "2 hours",
   },
   {
     id: "bice",
     name: "BiCE Ristorante",
+    category: "restaurant",
     neighborhood: "Palm Beach (Worth Avenue)",
-    cuisine: "Italian",
     priceTier: "$$$$",
     vibe: ["classic", "old-world", "foodie"],
     blurb:
@@ -169,65 +166,365 @@ export const restaurants: Restaurant[] = [
     dressCode: "Jacket. Tie if you're so inclined; nobody will blink either way.",
     parking: "Valet on Worth. The Worth Avenue lot is two blocks east.",
     reservationNote: "Worth Avenue tables fill in season. Off-season, walk in at 6.",
+    typicalDuration: "2 hours",
   },
-];
+  {
+    id: "avocado-grill",
+    name: "Avocado Grill",
+    category: "restaurant",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["lively", "modern", "foodie", "coastal"],
+    blurb:
+      "Julien Gremaud's all-day room on Clematis. Bright, plant-forward menu, the kind of place that turns brunch into lunch into a long afternoon.",
+    bestFor: "Daytime starts. Brunch into a long talk.",
+    dressCode: "Anything you'd wear out for coffee.",
+    parking: "Garage two blocks east. Street if you're early.",
+    reservationNote: "Weekend brunch books up by Thursday.",
+    typicalDuration: "90 minutes",
+  },
 
-export const experiences: Experience[] = [
+  // ── Bars / Cocktails ───────────────────────────────────────────
+  {
+    id: "hmf-breakers",
+    name: "HMF at The Breakers",
+    category: "bar",
+    neighborhood: "Palm Beach",
+    priceTier: "$$$$",
+    vibe: ["classic", "sceney", "old-world"],
+    blurb:
+      "The bar program at The Breakers. Polished room, old-money clientele, a list that takes the cocktail seriously and the small plates almost as seriously.",
+    bestFor: "A drink before something else, when you want the room to do half the work.",
+    dressCode: "Resort-elegant. Jacket plays. No shorts at night.",
+    parking: "Valet at the hotel.",
+    typicalDuration: "60 to 90 minutes",
+  },
+  {
+    id: "honor-bar",
+    name: "Honor Bar",
+    category: "bar",
+    neighborhood: "Palm Beach (Royal Poinciana Plaza)",
+    priceTier: "$$$",
+    vibe: ["modern", "lively", "foodie"],
+    blurb:
+      "Hillstone's chic Palm Beach bar at the Plaza. All-day cocktails, a French dip you'll keep ordering, a room that hums quietly all afternoon.",
+    bestFor: "Afternoon cocktails into early dinner. Polished without being stiff.",
+    dressCode: "Smart casual. A blazer reads right at night.",
+    parking: "Plaza lot. Free.",
+    typicalDuration: "60 to 90 minutes",
+  },
+  {
+    id: "blind-monk",
+    name: "The Blind Monk",
+    category: "bar",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["intimate", "quiet", "romantic"],
+    blurb:
+      "Wine bar with an enormous list, a serious cheese case, and a patio that catches the breeze in the right months.",
+    bestFor: "The first hour. Or the last hour, depending on how the night goes.",
+    dressCode: "Casual. Linen and loafers.",
+    parking: "Street on Belvedere. Easy.",
+    reservationNote: "A patio table for two on a Thursday is a soft ask.",
+    typicalDuration: "60 to 90 minutes",
+  },
+  {
+    id: "speakeasy-sourbon",
+    name: "The Speakeasy at Sourbon",
+    category: "bar",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$$",
+    vibe: ["intimate", "quiet", "modern"],
+    blurb:
+      "The hidden room above Sourbon. Dim, low-ceilinged, half a dozen tables, a bartender who'll make whatever you remember from a trip.",
+    bestFor: "A nightcap when the conversation has already gotten somewhere.",
+    dressCode: "Sharp. Anything you'd wear to a quiet dinner.",
+    parking: "Banyan garage, two blocks east.",
+    reservationNote: "By ask. The bartender at Sourbon downstairs can usually walk you up.",
+    typicalDuration: "60 minutes",
+  },
+
+  // ── Cafes ──────────────────────────────────────────────────────
+  {
+    id: "subculture-coffee",
+    name: "Subculture Coffee",
+    category: "cafe",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["modern", "lively"],
+    blurb:
+      "Design-forward coffee bar on Clematis. Concrete and warm wood, beans roasted in the back, a bench out front that catches the morning.",
+    bestFor: "Daytime starts. The kind of coffee that makes you sit longer than you planned.",
+    parking: "Street, easy before 9am.",
+    typicalDuration: "30 to 60 minutes",
+  },
+  {
+    id: "pumphouse-coffee",
+    name: "Pumphouse Coffee Roasters",
+    category: "cafe",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["quiet", "modern", "contemplative"],
+    blurb:
+      "Local roaster off Belvedere, calmer than downtown. Long wood tables, a few good pastries, the kind of room where you can hear each other.",
+    bestFor: "First cup of the day with no schedule attached.",
+    parking: "Free lot.",
+    typicalDuration: "45 to 60 minutes",
+  },
+
+  // ── Cultural ───────────────────────────────────────────────────
+  {
+    id: "norton",
+    name: "Norton Museum of Art",
+    category: "museum",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["cultural", "quiet", "classic"],
+    blurb:
+      "Foster + Partners renovation, an O'Keeffe, a Pollock, a sculpture garden you'll wish was twice the size. Thursday evenings are the move.",
+    bestFor:
+      "Before dinner, when she mentioned she likes museums and you'd like to find out what she means.",
+    parking: "Lot at the museum.",
+    reservationNote: "Free admission Thursdays after 5pm. South Dixie at Cranesnest.",
+    typicalDuration: "60 to 90 minutes",
+  },
+  {
+    id: "four-arts",
+    name: "Society of the Four Arts",
+    category: "gallery",
+    neighborhood: "Palm Beach",
+    priceTier: "$$",
+    vibe: ["cultural", "classic", "quiet", "literary"],
+    blurb:
+      "A small campus on the island with a gallery, a library, formal gardens, and a lecture hall that has hosted everyone from Roosevelt to Ginsberg. A polite morning's worth.",
+    bestFor: "Afternoons that want substance. The kind of date who'll point things out you'd missed.",
+    dressCode: "Resort-elegant. The kind of clothes you'd wear to a museum opening.",
+    parking: "Lot on site. Free.",
+    reservationNote: "Galleries have rotating shows. Check what's up before you go.",
+    typicalDuration: "90 minutes",
+  },
+  {
+    id: "kravis",
+    name: "Kravis Center for the Performing Arts",
+    category: "venue",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$$",
+    vibe: ["cultural", "classic", "lively"],
+    blurb:
+      "The big house downtown for concerts, theater, and dance. Dressy crowd, ambitious season. Curtain at 7:30 most nights.",
+    bestFor: "Anchoring an evening around a real event. Dinner before, a drink after.",
+    dressCode: "Jacket. Tie if you have a reason.",
+    parking: "Garage on Okeechobee, twenty dollars.",
+    reservationNote: "Buy ahead. Best seats book out a month for the bigger shows.",
+    typicalDuration: "2 hours",
+  },
+
+  // ── Gardens / Walks ────────────────────────────────────────────
+  {
+    id: "mounts-garden",
+    name: "Mounts Botanical Garden",
+    category: "garden",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["outdoor", "contemplative", "quiet"],
+    blurb:
+      "Fourteen acres off Military Trail. A tropical garden, a butterfly house, a tree path that winds longer than you'd expect. The kind of place that slows your pace twenty percent.",
+    bestFor: "Mornings that should not be in any room. Easy walking, lots to point at.",
+    dressCode: "Comfortable shoes. Sun cover.",
+    parking: "Free lot. Easy.",
+    reservationNote: "Open daily 9 to 5. A few dollars to get in.",
+    typicalDuration: "60 to 90 minutes",
+  },
+  {
+    id: "pans-garden",
+    name: "Pan's Garden",
+    category: "garden",
+    neighborhood: "Palm Beach (Preservation Foundation)",
+    priceTier: "$$",
+    vibe: ["outdoor", "contemplative", "quiet", "intimate"],
+    blurb:
+      "A pocket garden tucked behind the Preservation Foundation, all native Florida plants. Smaller than you'd think, but the bench by the koi pond is the move.",
+    bestFor: "Twenty quiet minutes between things, on the island.",
+    parking: "Street on Peruvian, mostly easy.",
+    reservationNote: "Free. Open most weekdays; check the schedule.",
+    typicalDuration: "30 minutes",
+  },
+  {
+    id: "worth-avenue",
+    name: "Worth Avenue",
+    category: "walk",
+    neighborhood: "Palm Beach",
+    priceTier: "$$",
+    vibe: ["classic", "cultural", "literary"],
+    blurb:
+      "Gallery windows, side vias most people miss, espresso at Pizza al Fresco's bar if you need a stop. The avenue at its quietest is the right one.",
+    bestFor: "After dinner on the island. A walk that says you know the place.",
+    parking: "Worth Avenue lot, two blocks back from the action.",
+    typicalDuration: "30 to 45 minutes",
+  },
+  {
+    id: "flagler-waterfront",
+    name: "Flagler Drive waterfront",
+    category: "walk",
+    neighborhood: "West Palm Beach",
+    priceTier: "$$",
+    vibe: ["outdoor", "waterfront", "coastal", "romantic"],
+    blurb:
+      "The promenade along the Intracoastal, downtown side. Wide path, the city on one side, the water and the island on the other. Sunset is the only time worth doing it.",
+    bestFor: "Twenty minutes that buy you another hour of conversation.",
+    parking: "Anywhere downtown. Walk to the water.",
+    typicalDuration: "30 to 45 minutes",
+  },
+
+  // ── Water ──────────────────────────────────────────────────────
   {
     id: "motunui-sunset",
     name: "Sunset Sail on the Motunui",
-    type: "cruise",
+    category: "water",
+    neighborhood: "Singer Island",
     priceTier: "$$$",
     vibe: ["waterfront", "romantic", "coastal"],
     blurb:
       "Ninety minutes on a luxury catamaran out of Sailfish Marina, sunset over the Intracoastal, the kind of light photographs don't quite catch.",
     bestFor: "Before dinner. The ride sets the tone, the dinner finishes the sentence.",
-    duration: "90 to 120 minutes",
-    pairsWellWith: "Before dinner anywhere on the island or downtown",
-    logistics:
+    parking: "Free at the marina.",
+    reservationNote:
       "Sailfish Marina, Singer Island. Boards 30 minutes prior. BYOB allowed; they pour the glasses.",
+    typicalDuration: "90 to 120 minutes",
   },
   {
     id: "mimosas-mansions",
-    name: "Mimosas, Mansions & Megayachts cruise",
-    type: "cruise",
+    name: "Mimosas, Mansions & Megayachts",
+    category: "water",
+    neighborhood: "West Palm Beach",
     priceTier: "$$",
     vibe: ["waterfront", "lively", "coastal", "classic"],
     blurb:
       "A daytime ninety-minute cruise along the Palm Beach waterfront. Trumps and Kennedys and Lauders, mimosas in hand, narrated by someone who knows the families.",
     bestFor: "Late morning into a long lunch.",
-    duration: "90 minutes",
-    pairsWellWith: "Before a Worth Avenue lunch or an early dinner",
-    logistics:
+    parking: "Public garage on the waterfront.",
+    reservationNote:
       "Departs from the West Palm Beach waterfront. Arrive twenty minutes early. Hat and sunglasses, even in winter.",
+    typicalDuration: "90 minutes",
   },
+
+  // ── Bookstore ──────────────────────────────────────────────────
   {
-    id: "norton",
-    name: "Norton Museum of Art",
-    type: "museum",
+    id: "classic-bookshop",
+    name: "Classic Bookshop",
+    category: "bookstore",
+    neighborhood: "Palm Beach (Worth Avenue)",
     priceTier: "$$",
-    vibe: ["quiet", "classic", "intimate"],
+    vibe: ["literary", "quiet", "classic"],
     blurb:
-      "Foster + Partners renovation, an O'Keeffe, a Pollock, a sculpture garden you'll wish was twice the size. Thursday evenings are the move.",
+      "An independent on Worth, well-stocked, owner there most days. Buy something. They will wrap it for you if you ask.",
     bestFor:
-      "Before dinner, when she mentioned she likes museums and you'd like to find out what she means.",
-    duration: "60 to 90 minutes",
-    pairsWellWith: "Before dinner in West Palm Beach proper",
-    logistics:
-      "Open late on Thursdays, free admission after 5pm. South Dixie at Cranesnest.",
+      "An after-coffee hour. A way to find out what she's reading by watching what she picks up.",
+    parking: "Worth Avenue lot, around the corner.",
+    typicalDuration: "30 to 45 minutes",
+  },
+
+  // ── Sport ──────────────────────────────────────────────────────
+  {
+    id: "par-3-golf",
+    name: "Palm Beach Par 3 Golf Course",
+    category: "sport",
+    neighborhood: "Palm Beach",
+    priceTier: "$$$",
+    vibe: ["outdoor", "active", "coastal", "classic"],
+    blurb:
+      "Oceanfront par-3 on the south end of the island. Short, walkable, beginner-friendly, the views do a lot of the work.",
+    bestFor: "Athletic dates that want air. Doesn't take all afternoon.",
+    dressCode: "Collared shirt, soft spikes or sneakers. Borrow clubs if you need to.",
+    parking: "Lot at the course. Free.",
+    reservationNote: "Tee times required, especially in season. Eighteen holes runs about 90 minutes.",
+    typicalDuration: "90 minutes",
+  },
+];
+
+export const archetypes: Archetype[] = [
+  {
+    id: "classic",
+    name: "The Classic",
+    description:
+      "Three rooms in a single line. Drinks first, dinner where it counts, a quiet last drink to land.",
+    shape: ["cocktails", "dinner", "nightcap"],
+    signal: "Patience and taste.",
+    bestFor:
+      "Confident first dinners, second dates, anyone you want to impress without trying.",
+    intensity: "medium",
+    timeOfDay: "evening",
   },
   {
-    id: "worth-avenue-stroll",
-    name: "Worth Avenue evening stroll",
-    type: "walk",
-    priceTier: "$$",
-    vibe: ["classic", "romantic", "quiet"],
-    blurb:
-      "Gallery windows, a stop for espresso, the side vias most people miss. No reservation, no plan, just the avenue at its quietest.",
-    bestFor: "After dinner on the island. A walk that says you know the place.",
-    duration: "30 to 45 minutes",
-    pairsWellWith: "After a BiCE, Boulud, or L'Europe dinner",
-    logistics:
-      "No booking. Park at the Worth Avenue lot, or walk from your dinner. Espresso at Pizza al Fresco's bar if you need a stop.",
+    id: "slow-morning",
+    name: "The Slow Morning",
+    description: "Coffee first, then walking until the morning runs out.",
+    shape: ["coffee", "walk"],
+    signal: "Groundedness and intention.",
+    bestFor: "People who'd rather talk than perform. Early stage, low-key, the morning after.",
+    intensity: "low",
+    timeOfDay: "morning",
+  },
+  {
+    id: "salon",
+    name: "The Salon",
+    description: "An hour with something on a wall, then a drink to talk about what you saw.",
+    shape: ["cultural", "cocktails"],
+    signal: "Curiosity and substance.",
+    bestFor: "Thoughtful women, second or third dates, anyone bored by standard dinners.",
+    intensity: "medium",
+    timeOfDay: "evening",
+  },
+  {
+    id: "big-swing",
+    name: "The Big Swing",
+    description:
+      "An hour on the water, then dinner that earns it, then one last drink because you're not driving.",
+    shape: ["water", "dinner", "nightcap"],
+    signal: "Generosity and time.",
+    bestFor:
+      "Anniversaries, women who appreciate scale, anyone who needs to make up for something.",
+    intensity: "high",
+    timeOfDay: "evening",
+  },
+  {
+    id: "long-walk",
+    name: "The Long Walk",
+    description: "Walking first, then dinner. The pacing carries the conversation.",
+    shape: ["walk", "dinner"],
+    signal: "Comfort and rhythm.",
+    bestFor: "People who get talkative when they're moving. Second dates that need oxygen.",
+    intensity: "low",
+    timeOfDay: "flexible",
+  },
+  {
+    id: "off-hours",
+    name: "The Off-Hours",
+    description: "A long brunch, then a couple hours of looking at things together.",
+    shape: ["brunch", "browse"],
+    signal: "Ease and curiosity.",
+    bestFor: "Weekends, people who don't drink, daytime chemistry.",
+    intensity: "low",
+    timeOfDay: "daytime",
+  },
+  {
+    id: "outing",
+    name: "The Outing",
+    description: "An hour doing something side by side, then a meal you both earned.",
+    shape: ["activity", "dinner"],
+    signal: "Energy and ease.",
+    bestFor: "Athletic women, people who hate small talk, anyone who connects through doing.",
+    intensity: "medium",
+    timeOfDay: "daytime",
+  },
+  {
+    id: "quiet-room",
+    name: "The Quiet Room",
+    description: "Two rooms, both quiet on purpose. The whole night is the conversation.",
+    shape: ["dinner", "nightcap"],
+    signal: "Attention and care.",
+    bestFor: "Deep conversation, third date and beyond, women who like to be heard.",
+    intensity: "low",
+    timeOfDay: "evening",
   },
 ];
