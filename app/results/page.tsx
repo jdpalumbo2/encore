@@ -189,11 +189,11 @@ function PackageCard({ pkg }: { pkg: Package }) {
         </div>
       )}
 
-      <div className="mt-auto pt-7 flex items-center justify-between">
+      <div className="mt-auto pt-7 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <p className="font-sans text-sm text-text-muted">
           {formatPriceEstimate(pkg.priceEstimate)}
         </p>
-        <p className="font-sans text-sm font-semibold text-primary group-hover:text-brass transition-colors">
+        <p className="font-sans text-sm font-semibold text-primary group-hover:text-brass transition-colors whitespace-nowrap">
           See the evening &rarr;
         </p>
       </div>
