@@ -1,13 +1,15 @@
 # Encore
 
-> A curated date concierge for older men in West Palm Beach. The user describes a date, gets three options (**The Classic**, **The Off-Note**, **The Big Swing**), picks one, and mock-confirms an evening built around a real West Palm restaurant and an optional add-on.
+> A date concierge for older men in West Palm Beach. The user describes a date, gets three structurally different evenings, picks one, and mock-confirms.
+
+Encore designs evening **sequences**, not single recommendations. The system selects from eight archetypes (The Classic, The Long Walk, The Quiet Room, The Big Swing, The Salon, The Outing, The Off-Hours, The Slow Morning) and instantiates each with real West Palm venues. The user sees three structurally different evenings — different shapes, different rooms, different signals — and the differentiation is the entire point.
 
 This is the demo MVP. One stakeholder will walk through it end-to-end. Quality bar is high; surface area is intentionally narrow.
 
 **Live:** https://encore-mocha-ten.vercel.app
 **Repo:** https://github.com/jdpalumbo2/encore
 **Stakeholder doc (binding):** [`CLAUDE.md`](./CLAUDE.md)
-**Build phases:** [`Buildplan.md`](./Buildplan.md)
+**Build phases:** [`Buildplan.md`](./Buildplan.md) (Phases 0–6) and [`BUILDPLAN-V2.md`](./BUILDPLAN-V2.md) (Phases 7–10)
 **Open follow-ups:** [`FOLLOWUPS.md`](./FOLLOWUPS.md)
 
 ---
@@ -34,7 +36,7 @@ This is the demo MVP. One stakeholder will walk through it end-to-end. Quality b
 
 ## What this is
 
-A web app that translates a short, free-form brief about a date (who she is, when, what kind of night, budget, anything to avoid) into three plausible, well-written, end-to-end evenings in West Palm Beach. Each evening is built around a real restaurant pulled from a hand-curated seed list, optionally paired with a real second-half experience (sunset sail, museum, walk, daytime cruise), and presented with the room, the dress code, the parking, two specific conversation starters tuned to her, and one thing not to bring up.
+A web app that translates a short, free-form brief about a date (who she is, when, what kind of night, budget, anything to avoid) into three structurally different evenings in West Palm Beach. Each evening is an instantiation of an **archetype** (a template for an evening's shape) filled stage-by-stage with real venues from a hand-curated seed list. The user sees the archetype name, the sequence of stages (e.g., `Cocktails – Dinner – Nightcap`), a one-sentence headline calibrated to her, and a signal phrase (e.g., "Patience and taste"). On the detail page they get the full sequence with a numbered stage block per venue, transition lines between stages, two specific conversation starters tuned to her, one thing to skip tonight, and a price estimate with a concierge-fee disclosure.
 
 The product is positioned to feel like a friend's recommendation, not an AI tool. The voice is the hardest part. See [`CLAUDE.md`](./CLAUDE.md) — the section labeled "Voice" is binding.
 
@@ -112,9 +114,10 @@ encore/
 │   └── encore/                   # Empty; reserved for Encore-specific composites if the system grows.
 │
 ├── lib/
-│   ├── types.ts                  # All shared types: Restaurant, Experience, Package, IntakeAnswers, PriceTier, VibeTag.
-│   ├── seed-data.ts              # The 12 restaurants and 4 experiences. Source of truth for the model.
-│   ├── encore-prompt.ts          # buildSystemPrompt() and buildUserPrompt() for the Anthropic call.
+│   ├── types.ts                  # All shared types: Venue, VenueCategory, VibeTag, StageKind, PackageStage, Archetype, Package, IntakeAnswers.
+│   ├── seed-data.ts              # The ~30 venues and 8 archetypes. Source of truth for the model.
+│   ├── encore-prompt.ts          # buildSystemPrompt(venues, archetypes), buildUserPrompt, buildRetryUserPrompt.
+│   ├── format.ts                 # formatPriceEstimate, formatShape, stageLabel, formatStageOrder. UI-side helpers.
 │   ├── cn.ts                     # Re-exports cn from utils.ts; satisfies the buildplan's "@/lib/cn" reference.
 │   └── utils.ts                  # The actual cn = (...) => twMerge(clsx(...)) helper. shadcn writes here.
 │
@@ -123,7 +126,8 @@ encore/
 │   └── (next.svg, globe.svg, etc — leftovers from create-next-app, harmless)
 │
 ├── CLAUDE.md                     # BINDING. Voice rules, palette, conventions, scope. Read first.
-├── Buildplan.md                  # Phase-by-phase plan from empty repo to deployed Vercel demo.
+├── Buildplan.md                  # Phase 0–6: scaffold to v1 deploy.
+├── BUILDPLAN-V2.md               # Phase 7–10: v2 (sequence-based) architecture.
 ├── SETUP.md                      # How a human runs the kickoff prompt.
 ├── AGENTS.md                     # One-liner: "this Next.js may differ from your training data, read node_modules/next/dist/docs/."
 ├── FOLLOWUPS.md                  # What's deliberately not done. Update when you defer something.
@@ -185,17 +189,17 @@ A state machine. The arrows label the user actions; the boxes label the routes; 
    [ / ]
      │ click "Plan the night"
      ▼
-   [ /plan ]                           ── on submit, write sessionStorage["encore.intake"]
-     │                                    and clear sessionStorage["encore.packages"]
+   [ /plan ]                           ── on submit, write sessionStorage["encore.intake.v2"]
+     │                                    and clear sessionStorage["encore.packages.v2"]
      │ click "See the three options"
      ▼
-   [ /results ]                        ── on mount, if "encore.packages" missing, POST
+   [ /results ]                        ── on mount, if "encore.packages.v2" missing, POST
      │                                    /api/curate with the intake; on response, write
-     │                                    "encore.packages"; render three cards.
+     │                                    "encore.packages.v2"; render three cards.
      │ click a package card
      ▼
-   [ /package/[id] ]                   ── on mount, read "encore.packages", find by id;
-     │                                    update document.title to package title.
+   [ /package/[id] ]                   ── on mount, read "encore.packages.v2", find by id;
+     │                                    update document.title to archetype name.
      │ click "Book this evening"
      ▼
    [ /confirm?packageId=… ]            ── on mount, read package + intake.when from
@@ -206,10 +210,10 @@ A state machine. The arrows label the user actions; the boxes label the routes; 
 
 | Key | Type | Set by | Read by |
 |---|---|---|---|
-| `encore.intake` | JSON-serialized `IntakeAnswers` | `/plan` on submit | `/results` (to fire the API), `/confirm` (for the `when` line) |
-| `encore.packages` | JSON-serialized `Package[]` | `/results` after a successful API response | `/results` (cache hit), `/package/[id]`, `/confirm` |
+| `encore.intake.v2` | JSON-serialized `IntakeAnswers` | `/plan` on submit | `/results` (to fire the API), `/confirm` (for the `when` line) |
+| `encore.packages.v2` | JSON-serialized `Package[]` | `/results` after a successful API response | `/results` (cache hit), `/package/[id]`, `/confirm` |
 
-Both are scoped to the browser tab. They go away on tab close.
+Both are scoped to the browser tab. They go away on tab close. The `.v2` suffix invalidates any cached v1 data automatically — old keys silently miss and trigger a fresh fetch.
 
 ### Direct deep-link behavior
 
@@ -224,55 +228,76 @@ Every page that depends on session state has a designed empty-state, not a silen
 
 ## Data model
 
-`lib/types.ts` is the single source of truth.
+`lib/types.ts` is the single source of truth. v2 unifies the v1 `Restaurant` + `Experience` types into a single `Venue` with a `category` field, and introduces `Archetype`, `PackageStage`, and a reshaped `Package`.
 
 ```ts
 type PriceTier = "$$" | "$$$" | "$$$$";
 
+type VenueCategory =
+  | "restaurant" | "bar" | "cafe" | "museum" | "gallery"
+  | "garden" | "walk" | "water" | "bookstore" | "sport" | "venue";
+
 type VibeTag =
-  | "classic" | "lively" | "intimate" | "waterfront"
-  | "romantic" | "modern" | "old-world" | "sceney"
-  | "quiet" | "jazz" | "coastal" | "foodie";
+  | "classic" | "lively" | "intimate" | "waterfront" | "romantic"
+  | "modern" | "old-world" | "sceney" | "quiet" | "jazz" | "coastal"
+  | "foodie" | "cultural" | "outdoor" | "active" | "contemplative" | "literary";
 
-interface Restaurant {
-  id: string;            // stable kebab-case id, used by the model
+interface Venue {
+  id: string;
   name: string;
+  category: VenueCategory;
   neighborhood: string;
-  cuisine: string;
   priceTier: PriceTier;
-  vibe: VibeTag[];       // 3-5 tags
-  blurb: string;         // one to two sentences in Encore's voice
-  bestFor: string;       // a one-line scene-setter
-  dressCode: string;     // logistics, in voice
-  parking: string;       // logistics, in voice
-  reservationNote?: string;
-}
-
-interface Experience {
-  id: string;            // stable kebab-case id
-  name: string;
-  type: "cruise" | "museum" | "walk" | "gallery" | "cocktails" | "show";
-  priceTier: PriceTier;
-  vibe: VibeTag[];
+  vibe: VibeTag[];          // 3-5 tags
   blurb: string;
   bestFor: string;
-  duration: string;      // free-form, e.g. "60 to 90 minutes"
-  pairsWellWith: string; // describes when in the night (used to label the section heading)
-  logistics: string;
+  dressCode?: string;
+  parking?: string;
+  reservationNote?: string;
+  typicalDuration: string;  // free-form, e.g. "90 minutes"
+}
+
+type StageKind =
+  | "cocktails" | "dinner" | "nightcap" | "coffee" | "brunch"
+  | "walk" | "cultural" | "activity" | "water" | "browse" | "show";
+
+interface PackageStage {
+  order: number;          // 1, 2, 3...
+  kind: StageKind;
+  venueId: string;        // resolved server-side before reaching the client
+  venue: Venue;           // hydrated
+  timeOfEvening: string;  // free-form, e.g. "5:30 pm" or "right after dinner"
+  why: string;            // one line: why this venue at this point
+  transition?: string;    // optional: one line on how to move to the next stage
+}
+
+interface Archetype {
+  id: string;             // kebab-case slug, e.g. "classic", "long-walk"
+  name: string;           // "The Classic", "The Long Walk", etc.
+  description: string;    // one sentence describing the shape
+  shape: StageKind[];     // canonical sequence
+  signal: string;         // what this evening communicates
+  bestFor: string;
+  intensity: "low" | "medium" | "high";
+  timeOfDay: "morning" | "daytime" | "evening" | "flexible";
 }
 
 interface Package {
-  id: string;            // exactly one of "classic" | "off-note" | "big-swing"
-  title: string;         // "The Classic" | "The Off-Note" | "The Big Swing"
-  headline: string;      // one sentence positioning
-  restaurant: Restaurant;          // hydrated from id
-  experience?: Experience;         // hydrated from optional id
-  narrative: string;               // 3-5 sentences
-  dressCode: string;
-  parking: string;
-  conversationStarters: string[];  // exactly 2 items
-  dontBringUp: string;             // exactly 1 item
-  priceEstimate: string;           // e.g. "$220 to $280 per person"
+  id: string;                 // matches archetypeId (one of the eight)
+  archetypeId: string;
+  archetypeName: string;      // denormalized
+  headline: string;           // one sentence calibrated to her
+  signal: string;             // 2-4 word phrase tuned to this date
+  stages: PackageStage[];     // 2-4 stages
+  narrative: string;          // 3-5 sentences
+  conversationStarters: string[];   // exactly 2
+  dontBringUp: string;        // exactly 1
+  priceEstimate: {
+    low: number;              // dollars per person
+    high: number;
+    perPerson: boolean;       // always true in v2
+    conciergeFeeNote: string; // disclosure copy, model writes a slight rephrasing of the canonical line
+  };
 }
 
 interface IntakeAnswers {
@@ -284,6 +309,39 @@ interface IntakeAnswers {
 }
 ```
 
+### The eight archetypes
+
+| Id | Name | Shape | Signal |
+|---|---|---|---|
+| `classic` | The Classic | cocktails – dinner – nightcap | Patience and taste |
+| `slow-morning` | The Slow Morning | coffee – walk | Groundedness and intention |
+| `salon` | The Salon | cultural – cocktails | Curiosity and substance |
+| `big-swing` | The Big Swing | water – dinner – nightcap | Generosity and time |
+| `long-walk` | The Long Walk | walk – dinner | Comfort and rhythm |
+| `off-hours` | The Off-Hours | brunch – browse | Ease and curiosity |
+| `outing` | The Outing | activity – dinner | Energy and ease |
+| `quiet-room` | The Quiet Room | dinner – nightcap | Attention and care |
+
+The model picks **three distinct** archetypes per request. Two packages with the same `archetypeId` triggers a one-shot multi-turn retry with a corrective user message naming the specific archetypes still needed.
+
+### Stage kind → venue category compatibility
+
+The system prompt enforces this table; server-side hydration drops any package whose stage references an incompatible venue.
+
+| Stage kind | Compatible venue categories |
+|---|---|
+| `cocktails` | `bar`, `restaurant` |
+| `dinner` | `restaurant` |
+| `nightcap` | `bar`, `restaurant` |
+| `coffee` | `cafe`, `restaurant` |
+| `brunch` | `restaurant`, `cafe` |
+| `walk` | `walk`, `garden` |
+| `cultural` | `museum`, `gallery`, `venue` |
+| `activity` | `sport` |
+| `water` | `water` |
+| `browse` | `bookstore`, `gallery`, `walk` |
+| `show` | `venue` |
+
 ### Hydration
 
 The Anthropic tool schema constrains `restaurantId` and `experienceId` to enums of seed ids. The model returns ids only. The route code (`app/api/curate/route.ts`, lines 158–186) maps ids back into the full `Restaurant` / `Experience` objects before sending the response to the client. This means:
@@ -294,7 +352,7 @@ The Anthropic tool schema constrains `restaurantId` and `experienceId` to enums 
 
 ### IDs and titles
 
-Package IDs are deliberately fixed: `"classic"`, `"off-note"`, `"big-swing"`. The titles in the UI are `"The Classic"`, `"The Off-Note"`, `"The Big Swing"`. Don't change either without changing both — the package detail route is `/package/[id]` and the URL needs to be a slug.
+Package `id` matches `archetypeId` and is one of the eight slugs (`classic`, `slow-morning`, `salon`, `big-swing`, `long-walk`, `off-hours`, `outing`, `quiet-room`). The detail route `/package/[id]` reads `encore.packages.v2` from sessionStorage and finds by id. Archetype names ("The Classic", "The Long Walk", etc.) live in `lib/seed-data.ts` under the `archetypes` array; the model echoes the chosen archetype's name in the package's denormalized `archetypeName` field.
 
 ---
 
@@ -304,9 +362,9 @@ The single most important part of this codebase. Everything else is the wrapper.
 
 ### Files
 
-- `lib/encore-prompt.ts` — `buildSystemPrompt(restaurants, experiences)` and `buildUserPrompt(answers)`. Pure functions, no side effects.
-- `app/api/curate/route.ts` — the POST handler. Validates input, calls Anthropic, hydrates the response.
-- `lib/seed-data.ts` — the venues. Inlined into the system prompt at request time.
+- `lib/encore-prompt.ts` — `buildSystemPrompt(venues, archetypes)`, `buildUserPrompt(answers)`, and `buildRetryUserPrompt(received, needed)` (used in the corrective second turn). Pure functions, no side effects.
+- `app/api/curate/route.ts` — the POST handler. Validates input, calls Anthropic, hydrates, validates archetype distinctness, retries once on collision.
+- `lib/seed-data.ts` — `venues` (~30) and `archetypes` (8). Both inlined into the system prompt at request time.
 
 ### Request shape
 
@@ -331,7 +389,7 @@ Content-Type: application/json
 }
 ```
 
-Always exactly three. The order is: The Classic, The Off-Note, The Big Swing.
+Always exactly three. Each package has a distinct `archetypeId` drawn from the eight archetypes. The order in the response array is the order the model produced them; the UI shows them in that order.
 
 ### Response shape (errors)
 
@@ -346,7 +404,7 @@ Status codes used:
 | 400 | Missing required fields, oversized free-text | "The brief is missing a few details." / "The brief is too long. Trim it back." |
 | 429 | Anthropic rate limit | "The service is busy. Try again in a moment." |
 | 500 | Missing `ANTHROPIC_API_KEY`, or the API rejected the key | "The curation service isn't configured." / "The curation service rejected its key." |
-| 502 | Upstream error, malformed tool call, missing tool call, unknown id in the response | "The curation service didn't respond. Try again." / "The response came back malformed." / `Unknown restaurant: <id>` |
+| 502 | Upstream error, malformed tool call, missing tool call, unable to assemble three distinct archetypes after one retry | "The curation service didn't respond. Try again." / "The response came back malformed. Try again." |
 
 The `/results` page surfaces the `error` field directly to the user. Be careful what you put in error messages: they're user-facing.
 
@@ -355,26 +413,32 @@ The `/results` page surfaces the `error` field directly to the user. Be careful 
 Anthropic's tool-use forces the model to fill a JSON schema. This gives us:
 
 - **Type safety on output.** No regex over markdown, no JSON parsing errors.
-- **Enum-constrained ids.** `restaurantId` and `experienceId` enums are computed from the seed list. The model cannot output a venue that doesn't exist.
-- **Cardinality guarantees.** `minItems: 3, maxItems: 3` on the package array. `minItems: 2, maxItems: 2` on conversation starters.
-- **No streaming complexity.** Tool responses arrive whole. We don't need to parse partial JSON. The buildplan suggested streaming if it improves perceived speed; for ~5–10s responses, the loading state on `/results` works fine.
+- **Enum-constrained ids.** `archetypeId` and `venueId` enums are computed from the seed list at request time. The model cannot output an archetype or venue that doesn't exist.
+- **Cardinality guarantees.** `minItems: 3, maxItems: 3` on the package array, `minItems: 2, maxItems: 4` on stages, `minItems: 2, maxItems: 2` on conversation starters.
+- **No streaming complexity.** Tool responses arrive whole. We don't need to parse partial JSON. For ~5–10s responses, the loading state on `/results` works fine.
 
 The route forces the tool call with `tool_choice: { type: "tool", name: "present_packages" }`. The model has no other option.
 
-### System prompt anatomy
+### System prompt anatomy (v2)
 
-`buildSystemPrompt(restaurants, experiences)` produces a single prompt with these sections (in order):
+`buildSystemPrompt(venues, archetypes)` produces a single prompt with these sections (in order):
 
 1. **Identity.** "You are Encore, a date concierge for older men in West Palm Beach."
 2. **Voice.** Savvy older friend, dry, specific, never a chatbot. New Yorker columnist who got into the concierge business. Audience is 50+ men with money.
-3. **Forbidden words.** Curated, tailored, personalized, elevated experience, crafted, handpicked, perhaps, maybe, em dashes, emoji, AI-startup register.
-4. **Ground truth.** The seed `restaurants` and `experiences` arrays inlined as JSON. The model is told it may only reference these ids.
-5. **Three-package contract.** Classic / Off-Note / Big Swing intentions. The Big Swing must include an `experienceId`.
-6. **Budget mapping.** Comfortable → $$/$$$. Elevated → $$$/$$$$. No-ceiling → any tier, lean $$$$.
-7. **Per-field guidance.** Narrative (3–5 sentences, with good/bad examples). Conversation starters (exactly 2, full sentences he'd say out loud, with good/bad examples). Don't-bring-up (1 item, with examples). Price estimate (use "to" between numbers, no hyphen or em dash). Headline (1 sentence, with examples).
-8. **Output instruction.** Call `present_packages` exactly once, no other text.
+3. **Forbidden words.** Curated, tailored, personalized, elevated experience, crafted, handpicked, perfect for, perhaps, maybe, em dashes, emoji, AI-startup register, "I'm here to help," "let me," etc.
+4. **Ground truth.** The seed `venues` (~30) and `archetypes` (8) arrays inlined as JSON. The model may only reference these ids.
+5. **The job.** Pick three DISTINCT archetypes; instantiate each by selecting venues that match the archetype's stage shape.
+6. **Category compatibility table.** Maps each `StageKind` to the allowed `VenueCategory` values. The model must respect this; the route also enforces it via hydration drops.
+7. **Archetype selection rules.** Loose mappings from intake `vibe` and `budget` to archetypes; explicit guidance to spread across the eight over many requests.
+8. **Per-package field guidance.** Headline, signal, narrative (with good/bad examples), stages array, conversation starters (good/bad examples), don't-bring-up, price object, archetype name (denormalized).
+9. **Day-of-week awareness.** Light prompting to weave practical lines like "Wednesdays are softer at Buccan" or "Norton has Thursday evening hours" into `why` or `transition` copy when relevant.
+10. **Output instruction.** Call `present_packages` exactly once, no other text.
 
-The user message is the brief, formatted as a short text block.
+The user message is the brief, formatted as a short text block. On retry, the message thread becomes `[user, assistant (first tool call), user (corrective)]`.
+
+### The retry mechanism
+
+When the first response either (a) returns fewer than three valid packages after hydration drops, or (b) returns three with at least two sharing the same `archetypeId`, the route fires one corrective multi-turn message. The corrective user message names the specific archetypes still needed (`pickThreeArchetypes(received)` in `app/api/curate/route.ts` picks the gap-fillers from the eight archetypes in declaration order). One retry max; if it still fails, the route returns 502.
 
 ### Why so many examples in the prompt
 
@@ -383,13 +447,23 @@ The conversation starters and narrative fields are **the magic moment** of the d
 ### The hydration step
 
 ```ts
-const restaurantById = new Map(restaurants.map((r) => [r.id, r]));
-const experienceById = new Map(experiences.map((e) => [e.id, e]));
+const venueById = new Map(venues.map((v) => [v.id, v]));
 
-for (const r of raw) {
-  const restaurant = restaurantById.get(r.restaurantId);
-  if (!restaurant) return jsonError(502, `Unknown restaurant: ${r.restaurantId}`);
-  // …assemble the Package with full restaurant + optional experience
+function hydratePackages(raw: RawPackage[]): Package[] {
+  const result: Package[] = [];
+  for (const r of raw) {
+    const stages: PackageStage[] = [];
+    let dropped = false;
+    for (const s of r.stages) {
+      const venue = venueById.get(s.venueId);
+      if (!venue) { dropped = true; break; }    // drop this whole package, log
+      stages.push({ ...s, venue });
+    }
+    if (dropped) continue;
+    stages.sort((a, b) => a.order - b.order);
+    result.push({ id: r.archetypeId, ...r, stages });
+  }
+  return result;
 }
 ```
 
@@ -650,23 +724,43 @@ The expected error body when no key is set:
 
 If you're an agent picking this up, these are the most common changes and how to make them without breaking voice or scope.
 
-### Add a restaurant
+### Add a venue
 
-1. Append to the `restaurants` array in `lib/seed-data.ts`.
+1. Append to the `venues` array in `lib/seed-data.ts`.
 2. Pick a stable kebab-case `id`. Don't reuse one.
-3. Pick 3–5 vibe tags from the existing `VibeTag` union. Don't introduce new tags casually.
-4. Write `blurb` and `bestFor` in Encore's voice. Mirror the existing entries. **Test: read it out loud. If it sounds like a Yelp summary, rewrite.**
-5. The model picks it up automatically on the next API call (the schema enums are computed at request time).
+3. Set `category` to one of the eleven `VenueCategory` values. The category determines which `StageKind`s can use this venue (see the compatibility table above).
+4. Pick 3–5 vibe tags from the existing `VibeTag` union. Don't introduce new tags casually.
+5. Write `blurb` and `bestFor` in Encore's voice. Mirror the existing entries. **Test: read it out loud. If it sounds like a Yelp summary, rewrite.**
+6. Set `typicalDuration` (free-form, e.g. "90 minutes" or "2 hours").
+7. The model picks it up on the next API call (the schema enums are computed at request time).
 
-### Remove a restaurant
+### Remove a venue
 
-Just delete from the array. The model will not be able to refer to it by id. Clients holding cached `encore.packages` that include the removed venue will keep working (the data is hydrated and stored).
+Just delete from the array. Live `/api/curate` calls will no longer reference it. Clients holding cached `encore.packages.v2` that include the removed venue will keep working (the data is hydrated and stored).
+
+### Add a new archetype
+
+1. Append to the `archetypes` array in `lib/seed-data.ts`.
+2. Pick a stable kebab-case `id`. Make sure the `name` is on-voice; archetype names appear in many places (results card heading, detail page eyebrow, document title). Read it out loud.
+3. Set the `shape` to a sequence of `StageKind`s; verify each stage kind has at least one compatible venue in the seed list.
+4. The system prompt's "ARCHETYPE SELECTION RULES" section lists the eight archetypes by name; consider adding the new one there if you want it nudged for a particular intake `vibe`.
+5. The model picks it up automatically. The schema's `archetypeId` enum is computed at request time.
 
 ### Add a new vibe tag
 
 1. Add the value to the `VibeTag` union in `lib/types.ts`.
-2. Tag at least one restaurant with it (otherwise it's dead).
+2. Tag at least one venue with it (otherwise it's dead).
 3. The model will see the new tag in the inlined seed JSON and may use it as part of its reasoning. No prompt change needed.
+
+### Add a new stage kind
+
+1. Add the value to the `StageKind` union in `lib/types.ts`.
+2. Add it to `STAGE_KINDS` in `app/api/curate/route.ts` (used as the schema enum).
+3. Add a row to the category compatibility table in the system prompt (`lib/encore-prompt.ts`).
+4. Add an entry to `STAGE_LABEL` in `lib/format.ts` so it renders in the shape strip and stage block.
+5. Add at least one archetype that uses it (otherwise it's dead).
+6. Confirm at least one venue's category is in the new stage kind's compatibility list.
+Six places, every time.
 
 ### Change the model
 
@@ -698,6 +792,10 @@ Reasonable to do if the perceived latency is a complaint. Probably not worth it 
 ```
 
 If the new section needs new data, add a field to the `Package` interface in `lib/types.ts` AND to the tool schema in `app/api/curate/route.ts` AND to the system prompt's per-field guidance in `lib/encore-prompt.ts`. Three places, every time.
+
+### Add a new section to the **stage block**
+
+`<StageBlock>` lives in `app/package/[id]/page.tsx`. Add the rendering in there, and if it needs new data, follow the same three-places rule (`PackageStage` in types, `RawStage` + tool schema in route.ts, per-stage guidance in encore-prompt.ts).
 
 ### Adjust the brand palette
 
@@ -734,6 +832,10 @@ Why-this-not-that for the choices an agent might second-guess.
 - **Length caps on free-text inputs.** 2000 chars on `herDescription` and `avoid`, 200 on `when`. Defends against pasting essays into the brief and keeps prompt-injection windows narrow.
 - **`react-hooks/set-state-in-effect` disabled for `app/**/*.tsx`.** The legitimate sessionStorage→state pattern triggers it. Documented in FOLLOWUPS.md.
 - **No tests.** Demo. Manual exercise on the deployed URL is the verification. If this becomes a real product, integration tests around `/api/curate` (hitting Anthropic with a recorded brief) are the highest-value first step.
+- **v2: Venue + Archetype + Stage instead of Restaurant + Experience.** v1 collapsed any non-restaurant into "experience." v2 unifies under `Venue` with a `category` field so the model can mix categories per stage (e.g., a `walk` stage at a `garden`-category venue). Archetypes become the structural variety lever — the magic of v2 is "three structurally different evenings," not three differently-flavored dinners.
+- **v2: Multi-turn retry on archetype collision.** When the first response returns fewer than three valid packages or two with the same `archetypeId`, the route appends the assistant's tool block and a corrective user message naming the specific archetypes still needed. One retry max, surgical not "try harder," ~10s additional latency in the worst case (Sonnet typical 5–10s per call).
+- **v2: Concierge fee disclosure.** A 7% surcharge surfaces as one muted line on the package detail page (`What this evening costs` section) and the confirm page. The model writes a slight rephrasing of the canonical disclosure sentence per package; the confirm page uses a fixed string. This is the only place the monetization model surfaces. Not a sales pitch.
+- **v2: SessionStorage keys bumped to `.v2`.** The `Package` shape changed from "restaurant + optional experience" to "stages array." Old caches (`encore.intake`, `encore.packages`) silently miss after deploy and the user re-fetches into the new shape. Old keys remain in sessionStorage doing nothing until the tab closes; deemed cheaper than a runtime shape detector.
 
 ---
 
@@ -742,14 +844,18 @@ Why-this-not-that for the choices an agent might second-guess.
 Internal terminology used in code and prompts.
 
 - **Brief** — the bundle of intake answers. `IntakeAnswers` in code. The user submits a brief; the model produces packages from it.
-- **Package** — one of the three options the user picks from. Identified by `"classic"`, `"off-note"`, or `"big-swing"`.
-- **The Classic** — safe, beautiful, well-trodden. Cannot go wrong.
-- **The Off-Note** — slightly unexpected. The friend's personal recommendation.
-- **The Big Swing** — splashier, higher-ticket, must include a second-half experience.
+- **Venue** — any place the night might go: restaurant, bar, cafe, museum, gallery, garden, walk, water (cruise/sail), bookstore, sport, or generic venue (e.g., a performance hall). Unified type with a `category` field.
+- **Archetype** — a template for an evening's shape. Eight of them. `shape` is a sequence of `StageKind`s. `signal` is what the evening communicates.
+- **Package** — one of the three options the user picks from. An instantiation of an archetype with each stage filled by a real venue. Identified by an `archetypeId` slug.
+- **Stage** — a single segment of an evening, e.g., cocktails at HMF, then dinner at Boulud. `PackageStage` carries the `kind`, the resolved `venue`, the `timeOfEvening`, the `why` line, and an optional `transition`.
+- **Shape** — the canonical sequence of `StageKind`s for an archetype, e.g., `["cocktails", "dinner", "nightcap"]` for The Classic. The "shape strip" in the UI renders these as `Cocktails – Dinner – Nightcap`.
+- **Signal** — the 2–4 word phrase a package communicates. Distilled from the archetype's signal but tuned per date. Renders as a brass-bordered pill on the results card and detail hero.
+- **Transition** — the one-line note between two stages explaining how to move from one to the next. Optional. Where pacing shows up.
 - **Narrative** — the 3–5 sentence arc-of-the-evening paragraph. Lives on `Package.narrative`.
 - **Conversation starter** — a complete sentence or question he could say out loud to her, calibrated to her description. Two per package.
 - **Don't bring up** — one tasteful skip per package. Subtle aside, never preachy.
-- **Hydration** — the server-side step in `/api/curate` that turns model-returned ids into full `Restaurant`/`Experience` objects nested in each `Package`.
+- **Concierge fee** — a 7% surcharge disclosed on the detail page and confirm page. The product's monetization seed; surfaced as one neutral muted line, not a sales pitch.
+- **Hydration** — the server-side step in `/api/curate` that turns model-returned ids into full `Venue` objects nested inside each `PackageStage`. Drops any package whose stage references an unknown `venueId`.
 - **Wordmark** — the "Encore" text-only logo in the header. Cormorant Garamond, weight 500, with `tracking-[0.06em]`.
 - **Hairline** — the 1px `#E5DFD5` border used for cards and dividers. Replaces drop shadows in this design system.
 - **Specimens** — the three small example evening cards on the landing page. Static; demonstrate what the product produces without an LLM round-trip.
@@ -760,18 +866,19 @@ Internal terminology used in code and prompts.
 
 If you forget exactly where something lives, this is the cheat sheet.
 
-- **Add a restaurant or experience:** `lib/seed-data.ts`
+- **Add a venue or archetype:** `lib/seed-data.ts`
 - **Change a type:** `lib/types.ts`
-- **Tune the model's voice or rules:** `lib/encore-prompt.ts`
-- **Change the API request/response shape:** `app/api/curate/route.ts` (and types, and prompt)
+- **Tune the model's voice, rules, archetype-selection logic, or category compatibility:** `lib/encore-prompt.ts`
+- **Change the API request/response shape, hydration, retry logic:** `app/api/curate/route.ts` (and types, and prompt)
+- **Tweak price formatting, shape strip rendering, stage labels:** `lib/format.ts`
 - **Edit landing copy:** `app/page.tsx`
 - **Edit intake questions:** `app/plan/page.tsx`
 - **Edit the results card layout:** `app/results/page.tsx`
-- **Edit the full evening view:** `app/package/[id]/page.tsx`
+- **Edit the full evening view (sequence section, stage block, transition note, "What this evening costs"):** `app/package/[id]/page.tsx`
 - **Edit the mock booking page:** `app/confirm/page.tsx`
 - **Add a brand color, font, or radius token:** `app/globals.css`
 - **Change the wordmark or footer:** `app/layout.tsx`
 - **Override a lint rule:** `eslint.config.mjs`
 - **Tweak metadata / titles per route:** `app/<route>/layout.tsx`
 
-For anything else, search starts at `CLAUDE.md` (binding rules) and `Buildplan.md` (build phases). If a question has no answer in either, that is itself useful information — note it in `FOLLOWUPS.md` and ask.
+For anything else, search starts at `CLAUDE.md` (binding rules), `Buildplan.md` (Phases 0–6), and `BUILDPLAN-V2.md` (Phases 7–10). If a question has no answer in any of them, that is itself useful information — note it in `FOLLOWUPS.md` and ask.
