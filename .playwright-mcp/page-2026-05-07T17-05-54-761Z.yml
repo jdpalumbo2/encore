@@ -1,0 +1,23 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore" [ref=e4] [cursor=pointer]:
+      - /url: /
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - paragraph [ref=e7]: West Palm Beach. By invitation.
+      - heading "Plan a night that says you’ve been paying attention." [level=1] [ref=e8]
+      - paragraph [ref=e9]: You bring the date. Encore handles the rest of the evening.
+      - link "Plan the night" [ref=e11] [cursor=pointer]:
+        - /url: /plan
+      - generic [ref=e12]:
+        - article [ref=e13]:
+          - paragraph [ref=e14]: A second date with someone who reads.
+          - paragraph [ref=e15]: Maison Carlos, the corner table. Then a walk on Worth.
+        - article [ref=e16]:
+          - paragraph [ref=e17]: An anniversary that needs to land.
+          - paragraph [ref=e18]: Sunset on the Motunui, then Milos by the window.
+        - article [ref=e19]:
+          - paragraph [ref=e20]: A Thursday that wants a little volume.
+          - paragraph [ref=e21]: Pink Steak at eight, Sourbon upstairs after.
+  - contentinfo [ref=e22]:
+    - generic [ref=e23]: Encore. West Palm Beach.

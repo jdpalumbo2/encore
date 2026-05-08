@@ -1,0 +1,58 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore" [ref=e4] [cursor=pointer]:
+      - /url: /
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - paragraph [ref=e8]: Three evenings
+        - heading "Three different reads on the night." [level=1] [ref=e9]
+        - paragraph [ref=e10]: "Pick one to see the full sequence: rooms, pacing, what to ask her about."
+      - generic [ref=e11]:
+        - link "The Big Swing Water – Dinner – Nightcap Ninety minutes on the water at golden hour, then dinner that actually deserves it. Generosity and scale Starts at Sunset Sail on the Motunui · Singer Island $280–$420 per person See the evening →" [ref=e12] [cursor=pointer]:
+          - /url: /package/big-swing
+          - heading "The Big Swing" [level=2] [ref=e13]
+          - paragraph [ref=e14]: Water – Dinner – Nightcap
+          - paragraph [ref=e15]: Ninety minutes on the water at golden hour, then dinner that actually deserves it.
+          - generic [ref=e17]: Generosity and scale
+          - generic [ref=e18]:
+            - paragraph [ref=e19]: Starts at
+            - paragraph [ref=e20]:
+              - text: Sunset Sail on the Motunui
+              - generic [ref=e21]: · Singer Island
+          - generic [ref=e22]:
+            - paragraph [ref=e23]: $280–$420 per person
+            - paragraph [ref=e24]: See the evening →
+        - link "The Outing Activity – Dinner Oceanfront golf on the south end of the island, then Italian that earns the second glass. Energy and ease Starts at Palm Beach Par 3 Golf Course · Palm Beach $180–$280 per person See the evening →" [ref=e25] [cursor=pointer]:
+          - /url: /package/outing
+          - heading "The Outing" [level=2] [ref=e26]
+          - paragraph [ref=e27]: Activity – Dinner
+          - paragraph [ref=e28]: Oceanfront golf on the south end of the island, then Italian that earns the second glass.
+          - generic [ref=e30]: Energy and ease
+          - generic [ref=e31]:
+            - paragraph [ref=e32]: Starts at
+            - paragraph [ref=e33]:
+              - text: Palm Beach Par 3 Golf Course
+              - generic [ref=e34]: · Palm Beach
+          - generic [ref=e35]:
+            - paragraph [ref=e36]: $180–$280 per person
+            - paragraph [ref=e37]: See the evening →
+        - link "The Salon Cultural – Cocktails An hour with the Pollocks and O'Keeffes, then drinks that give you something to talk about. Curiosity and substance Starts at Norton Museum of Art · West Palm Beach $90–$160 per person See the evening →" [ref=e38] [cursor=pointer]:
+          - /url: /package/salon
+          - heading "The Salon" [level=2] [ref=e39]
+          - paragraph [ref=e40]: Cultural – Cocktails
+          - paragraph [ref=e41]: An hour with the Pollocks and O'Keeffes, then drinks that give you something to talk about.
+          - generic [ref=e43]: Curiosity and substance
+          - generic [ref=e44]:
+            - paragraph [ref=e45]: Starts at
+            - paragraph [ref=e46]:
+              - text: Norton Museum of Art
+              - generic [ref=e47]: · West Palm Beach
+          - generic [ref=e48]:
+            - paragraph [ref=e49]: $90–$160 per person
+            - paragraph [ref=e50]: See the evening →
+      - link "← Adjust the brief" [ref=e52] [cursor=pointer]:
+        - /url: /plan
+  - contentinfo [ref=e53]:
+    - generic [ref=e54]: Encore. West Palm Beach.
+  - alert [ref=e55]

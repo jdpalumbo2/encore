@@ -1,0 +1,18 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore" [ref=e4] [cursor=pointer]:
+      - /url: /
+  - main [ref=e5]:
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - button "← Back" [ref=e38]
+        - generic [ref=e29]: 2 of 5
+      - generic [ref=e40]:
+        - heading "When?" [level=2] [ref=e41]
+        - paragraph [ref=e42]: Tomorrow, this weekend, or a date.
+        - textbox "When" [active] [ref=e44]:
+          - /placeholder: Saturday night
+      - button "Continue" [disabled] [ref=e37]
+  - contentinfo [ref=e22]:
+    - generic [ref=e23]: Encore. West Palm Beach.
+  - alert [ref=e24]: Plan the night · Encore

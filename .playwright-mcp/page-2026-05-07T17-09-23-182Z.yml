@@ -1,0 +1,9 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore" [ref=e4] [cursor=pointer]:
+      - /url: /
+  - main [ref=e5]:
+    - paragraph [ref=e86]: Designing three evenings…
+  - contentinfo [ref=e22]:
+    - generic [ref=e23]: Encore. West Palm Beach.
+  - alert [ref=e24]: Three options · Encore

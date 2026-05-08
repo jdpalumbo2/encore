@@ -1,0 +1,79 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore" [ref=e4] [cursor=pointer]:
+      - /url: /
+  - main [ref=e5]:
+    - article [ref=e133]:
+      - link "← The other two" [ref=e134] [cursor=pointer]:
+        - /url: /results
+      - generic [ref=e135]:
+        - paragraph [ref=e136]: The Big Swing
+        - heading "Ninety minutes on the water at golden hour, then dinner that actually deserves it." [level=1] [ref=e137]
+        - generic [ref=e139]: Generosity and scale
+      - generic [ref=e140]:
+        - paragraph [ref=e141]: The evening
+        - paragraph [ref=e143]: "Board the Motunui at Sailfish Marina by 5 pm, drinks in hand before the lines are off the dock. The sail runs ninety minutes, long enough that you both stop checking your phones. Dinner at Milos at eight: ask for a window table when you book, order the branzino for two, and let the wine list do some of the talking. The nightcap at HMF is two miles down the road, all old money and low light. Saturday nights there run late for the crowd that knows the bartender."
+      - generic [ref=e144]:
+        - paragraph [ref=e145]: The sequence
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]:
+                - generic [ref=e151]: "01"
+                - generic [ref=e152]: Water
+                - generic [ref=e153]: 5:30 pm
+              - heading "Sunset Sail on the Motunui" [level=3] [ref=e154]
+              - paragraph [ref=e155]: Singer Island · $$$ · 90 to 120 minutes
+              - paragraph [ref=e156]: A sunset catamaran sail out of Sailfish Marina puts her outdoors and moving, which is exactly where she's comfortable, and the light on the Intracoastal on a clear Saturday is the kind of thing that doesn't need narration.
+              - paragraph [ref=e157]: Ninety minutes on a luxury catamaran out of Sailfish Marina, sunset over the Intracoastal, the kind of light photographs don't quite catch.
+              - paragraph [ref=e158]: Free at the marina.
+              - paragraph [ref=e159]: Sailfish Marina, Singer Island. Boards 30 minutes prior. BYOB allowed; they pour the glasses.
+            - generic [ref=e160]:
+              - generic [ref=e161]: •
+              - paragraph [ref=e162]: Twenty-minute drive south to the island. She'll see the skyline from the bridge.
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - generic [ref=e165]:
+                - generic [ref=e166]: "02"
+                - generic [ref=e167]: Dinner
+                - generic [ref=e168]: 8:00 pm
+              - heading "Estiatorio Milos" [level=3] [ref=e169]
+              - paragraph [ref=e170]: West Palm Beach · $$$$ · 2 hours
+              - paragraph [ref=e171]: Whole fish on ice, a window table on the Intracoastal, and a wine list deep enough to spend real time in, which is the right gear change after a boat.
+              - paragraph [ref=e172]: Costas Spiliadis' Greek seafood temple on the Intracoastal. Whole fish on ice, a wine list with real depth, the kind of room where a quiet table by the window does most of the work for you.
+              - paragraph [ref=e173]: Jacket recommended. No jeans on the dinner side. · Valet at the Square. Easy.
+              - paragraph [ref=e174]: A week or two out. Window tables go first; ask for one when you book.
+            - generic [ref=e175]:
+              - generic [ref=e176]: •
+              - paragraph [ref=e177]: Walk the waterfront for ten minutes if the night is warm. No rush.
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - generic [ref=e181]: "03"
+              - generic [ref=e182]: Nightcap
+              - generic [ref=e183]: 10:30 pm
+            - heading "HMF at The Breakers" [level=3] [ref=e184]
+            - paragraph [ref=e185]: Palm Beach · $$$$ · 60 to 90 minutes
+            - paragraph [ref=e186]: The bar at The Breakers is the right room to land in when the evening has already been generous; it closes the night without undercutting it.
+            - paragraph [ref=e187]: The bar program at The Breakers. Polished room, old-money clientele, a list that takes the cocktail seriously and the small plates almost as seriously.
+            - paragraph [ref=e188]: Resort-elegant. Jacket plays. No shorts at night. · Valet at the hotel.
+      - generic [ref=e189]:
+        - paragraph [ref=e190]: Two things to ask her about
+        - list [ref=e192]:
+          - listitem [ref=e193]: Was Aspen still carrying snow or were you mostly on dry runs by the time you got there?
+          - listitem [ref=e194]: Do you play competitive tennis or is it more about who you're playing with?
+      - generic [ref=e195]:
+        - paragraph [ref=e196]: One thing to skip tonight
+        - paragraph [ref=e198]: The bill. She'll notice the evening; she doesn't need to see the math.
+      - generic [ref=e199]:
+        - paragraph [ref=e200]: What this evening costs
+        - generic [ref=e201]:
+          - paragraph [ref=e202]: $280–$420 per person
+          - paragraph [ref=e203]: Includes a 7% Encore concierge fee, itemized on your final bill at the venue.
+      - generic [ref=e204]:
+        - link "Book this evening · $280–$420 per person" [ref=e205] [cursor=pointer]:
+          - /url: /confirm?packageId=big-swing
+        - link "See the other two" [ref=e206] [cursor=pointer]:
+          - /url: /results
+  - contentinfo [ref=e22]:
+    - generic [ref=e23]: Encore. West Palm Beach.
+  - alert [ref=e24]: The Big Swing · Encore

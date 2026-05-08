@@ -1,0 +1,21 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "Encore" [ref=e4] [cursor=pointer]:
+      - /url: /
+  - main [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "← Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e10]: 1 of 5
+      - generic [ref=e12]:
+        - heading "Tell us about her." [level=2] [ref=e13]
+        - paragraph [ref=e14]: A few lines is plenty. The more specific, the better the night.
+        - textbox "Tell us about her" [ref=e16]:
+          - /placeholder: She's mid-50s, plays tennis, just got back from Aspen. Reads a lot of fiction. Doesn't drink red.
+      - button "Continue" [disabled] [ref=e18]
+  - contentinfo [ref=e19]:
+    - generic [ref=e20]: Encore. West Palm Beach.
+  - button "Open Next.js Dev Tools" [ref=e26] [cursor=pointer]:
+    - img [ref=e27]
+  - alert [ref=e30]
