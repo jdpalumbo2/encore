@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - link "Encore, home" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - text: Encore
+  - main [ref=e6]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - button "← Back" [ref=e40]
+        - generic [ref=e30]:
+          - generic [ref=e31]: Step
+          - text: 3 of 5
+      - generic [ref=e48]:
+        - heading "What kind of night?" [level=2] [ref=e49]
+        - paragraph [ref=e50]: Pick the one closest to it.
+        - radiogroup "What kind of night" [ref=e52]:
+          - radio "Relaxed dinner Easy night, three courses, home before eleven." [ref=e53]:
+            - generic [ref=e54]: Relaxed dinner
+            - generic [ref=e55]: Easy night, three courses, home before eleven.
+          - radio "Special occasion There's a reason on the calendar." [ref=e56]:
+            - generic [ref=e57]: Special occasion
+            - generic [ref=e58]: There's a reason on the calendar.
+          - radio "Adventurous Something she'll tell her friends about." [ref=e59]:
+            - generic [ref=e60]: Adventurous
+            - generic [ref=e61]: Something she'll tell her friends about.
+          - radio "Classic Old-world. By the book, in the best sense." [ref=e62]:
+            - generic [ref=e63]: Classic
+            - generic [ref=e64]: Old-world. By the book, in the best sense.
+      - button "Continue" [disabled] [ref=e39]
+  - contentinfo [ref=e23]:
+    - generic [ref=e24]: Encore. West Palm Beach.
+  - alert [ref=e25]: Plan the night · Encore

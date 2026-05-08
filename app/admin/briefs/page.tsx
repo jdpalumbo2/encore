@@ -12,7 +12,12 @@ interface PageProps {
 }
 
 function formatDate(d: Date): string {
+  // All admin timestamps render in US Eastern. Vercel Functions and Postgres
+  // operate in UTC; converting at the display layer keeps storage timezone-
+  // agnostic while the operator sees Eastern.
   return d.toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    weekday: "short",
     month: "short",
     day: "numeric",
     hour: "numeric",

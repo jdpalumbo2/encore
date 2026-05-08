@@ -1,0 +1,31 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - link "Encore, home" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - text: Encore
+  - main [ref=e6]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - button "← Back" [ref=e40]
+        - generic [ref=e30]:
+          - generic [ref=e31]: Step
+          - text: 4 of 5
+      - generic [ref=e66]:
+        - heading "Budget comfort?" [level=2] [ref=e67]
+        - paragraph [ref=e68]: Honest answer; we work better with the truth.
+        - radiogroup "Budget" [ref=e70]:
+          - radio "Comfortable $150–$250 per person" [ref=e71]:
+            - generic [ref=e72]: Comfortable
+            - generic [ref=e73]: $150–$250 per person
+          - radio "Elevated $250–$450 per person" [ref=e74]:
+            - generic [ref=e75]: Elevated
+            - generic [ref=e76]: $250–$450 per person
+          - radio "No ceiling Make it count." [ref=e77]:
+            - generic [ref=e78]: No ceiling
+            - generic [ref=e79]: Make it count.
+      - button "Continue" [disabled] [ref=e39]
+  - contentinfo [ref=e23]:
+    - generic [ref=e24]: Encore. West Palm Beach.
+  - alert [ref=e25]: Plan the night · Encore

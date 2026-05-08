@@ -1,0 +1,25 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - link "Encore, home" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - text: Encore
+  - main [ref=e6]:
+    - generic [ref=e214]:
+      - paragraph [ref=e215]: Confirmed
+      - heading "Your evening is held." [level=1] [ref=e216]
+      - generic [ref=e217]:
+        - paragraph [ref=e218]: The Big Swing
+        - heading "Sunset Sail on the Motunui" [level=2] [ref=e219]
+        - paragraph [ref=e220]: Singer Island
+        - paragraph [ref=e221]: Friday
+        - paragraph [ref=e222]: Ends with The Speakeasy at Sourbon.
+      - paragraph [ref=e223]: Everything you need is on the previous page. Read it once on the way over.
+      - paragraph [ref=e224]: A 7% concierge fee is included and will appear itemized on your bill at the venue.
+      - paragraph [ref=e225]: Have fun.
+      - link "Plan another evening →" [ref=e227] [cursor=pointer]:
+        - /url: /
+  - contentinfo [ref=e23]:
+    - generic [ref=e24]: Encore. West Palm Beach.
+  - alert [ref=e25]: Confirmed · Encore

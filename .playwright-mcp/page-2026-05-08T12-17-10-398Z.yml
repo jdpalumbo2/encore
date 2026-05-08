@@ -1,0 +1,64 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - link "Encore, home" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - text: Encore
+  - main [ref=e6]:
+    - generic [ref=e87]:
+      - generic [ref=e90]:
+        - paragraph [ref=e91]: Three evenings
+        - heading "Three different reads on the night." [level=1] [ref=e92]
+        - paragraph [ref=e93]: "Pick one to see the full sequence: rooms, pacing, what to ask her about."
+      - list [ref=e94]:
+        - listitem [ref=e95]:
+          - 'link "The Big Swing: An hour on the water at sunset, then dinner that earns it.. $280–$420 per person." [ref=e96] [cursor=pointer]':
+            - /url: /package/big-swing
+            - heading "The Big Swing" [level=2] [ref=e97]
+            - paragraph [ref=e98]: Water – Dinner – Nightcap
+            - paragraph [ref=e99]: An hour on the water at sunset, then dinner that earns it.
+            - generic [ref=e101]: Generosity and scale
+            - generic [ref=e102]:
+              - paragraph [ref=e103]: Starts at
+              - paragraph [ref=e104]:
+                - text: Sunset Sail on the Motunui
+                - generic [ref=e105]: · Singer Island
+            - generic [ref=e106]:
+              - paragraph [ref=e107]: $280–$420 per person
+              - paragraph [ref=e108]: See the evening →
+        - listitem [ref=e109]:
+          - 'link "The Outing: Oceanfront golf at golden hour, then pasta and a glass of something red.. $140–$220 per person." [ref=e110] [cursor=pointer]':
+            - /url: /package/outing
+            - heading "The Outing" [level=2] [ref=e111]
+            - paragraph [ref=e112]: Activity – Dinner
+            - paragraph [ref=e113]: Oceanfront golf at golden hour, then pasta and a glass of something red.
+            - generic [ref=e115]: Energy and ease
+            - generic [ref=e116]:
+              - paragraph [ref=e117]: Starts at
+              - paragraph [ref=e118]:
+                - text: Palm Beach Par 3 Golf Course
+                - generic [ref=e119]: · Palm Beach
+            - generic [ref=e120]:
+              - paragraph [ref=e121]: $140–$220 per person
+              - paragraph [ref=e122]: See the evening →
+        - listitem [ref=e123]:
+          - 'link "The Salon: An hour with a Pollock, then a drink to argue about what it means.. $60–$110 per person." [ref=e124] [cursor=pointer]':
+            - /url: /package/salon
+            - heading "The Salon" [level=2] [ref=e125]
+            - paragraph [ref=e126]: Cultural – Cocktails
+            - paragraph [ref=e127]: An hour with a Pollock, then a drink to argue about what it means.
+            - generic [ref=e129]: Curiosity and substance
+            - generic [ref=e130]:
+              - paragraph [ref=e131]: Starts at
+              - paragraph [ref=e132]:
+                - text: Norton Museum of Art
+                - generic [ref=e133]: · West Palm Beach
+            - generic [ref=e134]:
+              - paragraph [ref=e135]: $60–$110 per person
+              - paragraph [ref=e136]: See the evening →
+      - link "← Adjust the brief" [ref=e138] [cursor=pointer]:
+        - /url: /plan
+  - contentinfo [ref=e23]:
+    - generic [ref=e24]: Encore. West Palm Beach.
+  - alert [ref=e25]: Three options · Encore

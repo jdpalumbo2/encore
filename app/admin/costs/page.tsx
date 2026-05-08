@@ -14,8 +14,14 @@ interface DailyRow {
 }
 
 async function dailyBreakdown(): Promise<DailyRow[]> {
+  // Bucket and label days in US Eastern, not UTC. Without `AT TIME ZONE`,
+  // Postgres `date_trunc('day', ...)` rolls calendar days at 00:00 UTC,
+  // which puts ~8 hours of US Eastern evening into the next day.
   const rows = await db.execute(sql<DailyRow>`
-    select to_char(date_trunc('day', created_at), 'YYYY-MM-DD') as day,
+    select to_char(
+      date_trunc('day', created_at AT TIME ZONE 'America/New_York'),
+      'Dy, Mon FMDD'
+    ) as day,
       count(*)::int as requests,
       count(*) filter (where is_retry = true)::int as retries,
       count(*) filter (where success = false)::int as errors,
@@ -23,8 +29,8 @@ async function dailyBreakdown(): Promise<DailyRow[]> {
       coalesce(sum(output_tokens), 0)::int as output_tokens
     from model_calls
     where created_at >= now() - interval '7 days'
-    group by 1
-    order by 1 desc
+    group by date_trunc('day', created_at AT TIME ZONE 'America/New_York')
+    order by date_trunc('day', created_at AT TIME ZONE 'America/New_York') desc
   `);
   return rows.map((r) => r as unknown as DailyRow);
 }
