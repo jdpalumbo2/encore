@@ -32,7 +32,7 @@ function basicAuthOk(req: NextRequest): boolean {
   return password === expected;
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Admin-area auth gate. Tight matcher; explicitly excludes /api/curate
