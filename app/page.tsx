@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackOnMount } from "@/components/encore/track-on-mount";
 
 const specimens = [
   {
@@ -18,6 +19,7 @@ const specimens = [
 export default function Home() {
   return (
     <section className="mx-auto w-full max-w-[720px] px-6 pt-24 pb-20 sm:pt-32">
+      <TrackOnMount event="landing.viewed" />
       <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
         West Palm Beach. By invitation.
       </p>

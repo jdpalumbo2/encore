@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Package, PackageStage } from "@/lib/types";
 import { formatPriceEstimate, formatStageOrder, stageLabel } from "@/lib/format";
+import { track } from "@/lib/track";
 
 type LoadState =
   | { kind: "loading" }
@@ -31,6 +32,7 @@ export default function PackagePage() {
       }
       setState({ kind: "ready", pkg: found });
       document.title = `${found.archetypeName} · Encore`;
+      track("package.selected", { archetypeId: found.archetypeId });
     } catch {
       setState({ kind: "missing" });
     }

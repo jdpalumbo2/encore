@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState, useTransition, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, useTransition, type KeyboardEvent } from "react";
 import type { IntakeAnswers } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/track";
 
 type Vibe = IntakeAnswers["vibe"];
 type Budget = IntakeAnswers["budget"];
@@ -34,6 +35,13 @@ export default function PlanPage() {
   const [budget, setBudget] = useState<Budget | null>(null);
   const [avoid, setAvoid] = useState("");
 
+  const trackedStart = useRef(false);
+  useEffect(() => {
+    if (trackedStart.current) return;
+    trackedStart.current = true;
+    track("plan.started");
+  }, []);
+
   const total = 5;
   const canAdvance =
     (step === 1 && herDescription.trim().length > 3) ||
@@ -60,6 +68,7 @@ export default function PlanPage() {
       avoid: avoid.trim() || undefined,
     };
     setSubmitting(true);
+    track("brief.submitted", { vibe, budget });
     sessionStorage.setItem("encore.intake.v2", JSON.stringify(answers));
     sessionStorage.removeItem("encore.packages.v2");
     router.push("/results");

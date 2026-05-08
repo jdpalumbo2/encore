@@ -1,11 +1,14 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
 import {
   buildRetryUserPrompt,
   buildSystemPrompt,
   buildUserPrompt,
 } from "@/lib/encore-prompt";
 import { archetypes, venues } from "@/lib/seed-data";
+import { db } from "@/lib/db";
+import { briefs, modelCalls, packages as packagesTable } from "@/lib/db/schema";
 import type { IntakeAnswers, Package, PackageStage, StageKind, Venue } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -37,6 +40,15 @@ interface RawPackage {
     perPerson: boolean;
     conciergeFeeNote: string;
   };
+}
+
+interface ModelCallRecord {
+  inputTokens: number;
+  outputTokens: number;
+  latencyMs: number;
+  isRetry: boolean;
+  success: boolean;
+  errorKind: string | null;
 }
 
 const STAGE_KINDS: StageKind[] = [
@@ -204,6 +216,102 @@ function extractToolUse(message: Anthropic.Message): Anthropic.ToolUseBlock | nu
   );
 }
 
+function readSessionId(req: Request): string | null {
+  const cookieHeader = req.headers.get("cookie") ?? "";
+  const m = cookieHeader.match(/(?:^|;\s*)encore_sid=([^;]+)/);
+  return m?.[1] ?? null;
+}
+
+interface PersistArgs {
+  sessionId: string;
+  answers: IntakeAnswers;
+  packages: Package[];
+  modelCalls: ModelCallRecord[];
+  country: string | null;
+  city: string | null;
+}
+
+async function persistTelemetry(args: PersistArgs) {
+  try {
+    const [briefRow] = await db
+      .insert(briefs)
+      .values({
+        sessionId: args.sessionId,
+        herDescription: args.answers.herDescription,
+        whenText: args.answers.when,
+        vibe: args.answers.vibe,
+        budget: args.answers.budget,
+        avoid: args.answers.avoid ?? null,
+        requestCountry: args.country,
+        requestCity: args.city,
+      })
+      .returning({ id: briefs.id });
+
+    const briefId = briefRow.id;
+
+    if (args.packages.length > 0) {
+      await db.insert(packagesTable).values(
+        args.packages.map((p, i) => ({
+          briefId,
+          sessionId: args.sessionId,
+          archetypeId: p.archetypeId,
+          archetypeName: p.archetypeName,
+          shape: p.stages.map((s) => s.kind),
+          venueIds: p.stages.map((s) => s.venueId),
+          priceLow: p.priceEstimate.low,
+          priceHigh: p.priceEstimate.high,
+          payload: p as unknown as Record<string, unknown>,
+          position: i,
+        })),
+      );
+    }
+
+    if (args.modelCalls.length > 0) {
+      await db.insert(modelCalls).values(
+        args.modelCalls.map((m) => ({
+          briefId,
+          model: MODEL,
+          inputTokens: m.inputTokens,
+          outputTokens: m.outputTokens,
+          latencyMs: m.latencyMs,
+          isRetry: m.isRetry,
+          success: m.success,
+          errorKind: m.errorKind,
+        })),
+      );
+    }
+  } catch (e) {
+    console.error("[curate] telemetry persist failed:", e);
+  }
+}
+
+async function persistFailure(modelCallsBuffer: ModelCallRecord[]) {
+  if (modelCallsBuffer.length === 0) return;
+  try {
+    await db.insert(modelCalls).values(
+      modelCallsBuffer.map((m) => ({
+        briefId: null,
+        model: MODEL,
+        inputTokens: m.inputTokens,
+        outputTokens: m.outputTokens,
+        latencyMs: m.latencyMs,
+        isRetry: m.isRetry,
+        success: m.success,
+        errorKind: m.errorKind,
+      })),
+    );
+  } catch (e) {
+    console.error("[curate] failure-telemetry persist failed:", e);
+  }
+}
+
+function classifyStatus(status?: number): string {
+  if (status === 429) return "rate_limit";
+  if (status === 401 || status === 403) return "auth";
+  if (status === 408) return "timeout";
+  return "upstream";
+}
+
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return jsonError(
@@ -238,11 +346,17 @@ export async function POST(req: Request) {
     return jsonError(400, "The brief is too long. Trim it back.");
   }
 
+  const sessionId = readSessionId(req);
+  const country = req.headers.get("x-vercel-ip-country") ?? null;
+  const city = req.headers.get("x-vercel-ip-city") ?? null;
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const systemPrompt = buildSystemPrompt(venues, archetypes);
   const userPrompt = buildUserPrompt(answers);
+  const modelCallsBuffer: ModelCallRecord[] = [];
 
   let firstMessage: Anthropic.Message;
+  const t0 = Date.now();
   try {
     firstMessage = await client.messages.create({
       model: MODEL,
@@ -252,8 +366,25 @@ export async function POST(req: Request) {
       tool_choice: { type: "tool", name: "present_packages" },
       messages: [{ role: "user", content: userPrompt }],
     });
+    modelCallsBuffer.push({
+      inputTokens: firstMessage.usage.input_tokens,
+      outputTokens: firstMessage.usage.output_tokens,
+      latencyMs: Date.now() - t0,
+      isRetry: false,
+      success: true,
+      errorKind: null,
+    });
   } catch (e) {
     const status = (e as { status?: number })?.status;
+    modelCallsBuffer.push({
+      inputTokens: 0,
+      outputTokens: 0,
+      latencyMs: Date.now() - t0,
+      isRetry: false,
+      success: false,
+      errorKind: classifyStatus(status),
+    });
+    waitUntil(persistFailure(modelCallsBuffer));
     if (status === 429) return jsonError(429, "The service is busy. Try again in a moment.");
     if (status === 401 || status === 403) {
       return jsonError(500, "The curation service rejected its key.");
@@ -263,6 +394,9 @@ export async function POST(req: Request) {
 
   const firstTool = extractToolUse(firstMessage);
   if (!firstTool) {
+    modelCallsBuffer[0].success = false;
+    modelCallsBuffer[0].errorKind = "malformed";
+    waitUntil(persistFailure(modelCallsBuffer));
     return jsonError(502, "The response came back malformed.");
   }
 
@@ -270,6 +404,18 @@ export async function POST(req: Request) {
   let packages = hydratePackages(firstRaw);
 
   if (packages.length === 3 && distinctArchetypeIds(packages)) {
+    if (sessionId) {
+      waitUntil(
+        persistTelemetry({
+          sessionId,
+          answers,
+          packages,
+          modelCalls: modelCallsBuffer,
+          country,
+          city,
+        }),
+      );
+    }
     return NextResponse.json({ packages });
   }
 
@@ -279,6 +425,7 @@ export async function POST(req: Request) {
   const retryPrompt = buildRetryUserPrompt(receivedIds, neededIds);
 
   let retryMessage: Anthropic.Message;
+  const t1 = Date.now();
   try {
     retryMessage = await client.messages.create({
       model: MODEL,
@@ -292,14 +439,34 @@ export async function POST(req: Request) {
         { role: "user", content: retryPrompt },
       ],
     });
+    modelCallsBuffer.push({
+      inputTokens: retryMessage.usage.input_tokens,
+      outputTokens: retryMessage.usage.output_tokens,
+      latencyMs: Date.now() - t1,
+      isRetry: true,
+      success: true,
+      errorKind: null,
+    });
   } catch (e) {
     const status = (e as { status?: number })?.status;
+    modelCallsBuffer.push({
+      inputTokens: 0,
+      outputTokens: 0,
+      latencyMs: Date.now() - t1,
+      isRetry: true,
+      success: false,
+      errorKind: classifyStatus(status),
+    });
+    waitUntil(persistFailure(modelCallsBuffer));
     if (status === 429) return jsonError(429, "The service is busy. Try again in a moment.");
     return jsonError(502, "The curation service didn't respond. Try again.");
   }
 
   const retryTool = extractToolUse(retryMessage);
   if (!retryTool) {
+    modelCallsBuffer[1].success = false;
+    modelCallsBuffer[1].errorKind = "malformed";
+    waitUntil(persistFailure(modelCallsBuffer));
     return jsonError(502, "The response came back malformed.");
   }
 
@@ -307,6 +474,18 @@ export async function POST(req: Request) {
   packages = hydratePackages(retryRaw);
 
   if (packages.length === 3 && distinctArchetypeIds(packages)) {
+    if (sessionId) {
+      waitUntil(
+        persistTelemetry({
+          sessionId,
+          answers,
+          packages,
+          modelCalls: modelCallsBuffer,
+          country,
+          city,
+        }),
+      );
+    }
     return NextResponse.json({ packages });
   }
 
@@ -315,5 +494,8 @@ export async function POST(req: Request) {
     packages.length,
     packages.map((p) => p.archetypeId),
   );
+  modelCallsBuffer[1].success = false;
+  modelCallsBuffer[1].errorKind = "malformed";
+  waitUntil(persistFailure(modelCallsBuffer));
   return jsonError(502, "The response came back malformed. Try again.");
 }

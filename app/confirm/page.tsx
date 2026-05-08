@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Package } from "@/lib/types";
+import { track } from "@/lib/track";
 
 type LoadState =
   | { kind: "loading" }
@@ -43,6 +44,14 @@ function ConfirmInner() {
         }
       }
       setState({ kind: "ready", pkg: found, when });
+      track("booking.confirmed", { archetypeId: found.archetypeId });
+      // Persist the booking row for the admin Kanban (Phase E).
+      void fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ archetypeId: found.archetypeId }),
+        keepalive: true,
+      }).catch(() => {});
     } catch {
       setState({ kind: "missing" });
     }
