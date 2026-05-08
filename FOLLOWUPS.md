@@ -1,29 +1,18 @@
 # Follow-ups
 
-Open notes after Phases 7–10 of v2. Anything resolved is no longer listed here.
+Open notes after the admin dashboard ship (Phases A–F). v2 follow-ups verified or superseded are removed.
 
-## Live API: still unverified end-to-end from this machine
+## Vercel preview env vars not set
 
-`ANTHROPIC_API_KEY` was not available locally during any phase of this build. The v2 curation engine has not been exercised against a real model. After the key is set on Vercel, walk the flow once and confirm:
+`DATABASE_URL` and `ADMIN_PASSWORD` are set for **production** on Vercel, but `vercel env add ... preview` returned an opaque "hint" message and the values didn't land. PR previews would currently fail to render `/admin/*` and any DB-dependent page. Either set them via the Vercel dashboard for Preview, or set them after the next CLI bump.
 
-1. Three packages come back, each with a distinct `archetypeId`.
-2. Every stage has a hydrated `venue` object and the venue's `category` is compatible with the stage `kind`.
-3. The narrative reads in voice (no "curated," "perfect for," "crafted," em dashes).
-4. The conversation starters are full sentences he could say out loud, not topic headers.
-5. The signal phrase is 2–4 words and tuned to her, not just the archetype's default.
-6. Day-of-week awareness lands at least once across a few runs (e.g., a Wednesday Buccan note, a Thursday Norton note).
+## "The Off-Hours" name
 
-The graceful error path is wired up if the key is missing or the call fails.
+Borderline corporate ("off-hours" is meeting-vocab). v2 voice review on real model output didn't flag it, so it survived the ship. If a future read across a wider variety of briefs surfaces it sticking out, candidates: "The Saturday Morning" (constrains to weekend) or "The Slow Saturday" (same constraint, more in voice).
 
-## Variety check not run
+## Retry corrective message could be smarter
 
-Phase 10's variety check (three sample briefs, verify the system selects from a meaningful subset of the eight archetypes across runs) has not been done — same blocker as above. After the key is set, run:
-
-- "Athletic, just back from Aspen, plays tennis."
-- "She reads a lot, late 60s, recently widowed."
-- "Younger, ~40, works in finance, doesn't drink."
-
-If the system always picks The Classic, tighten the system prompt's "ARCHETYPE SELECTION RULES" with a stronger spread directive.
+`pickThreeArchetypes(received)` in `app/api/curate/route.ts` fills gaps from the eight archetypes in declaration order. If the model returns two The Classics and the brief is "athletic, weekend, no ceiling," the retry should bias the gap-fillers toward The Outing or The Big Swing rather than The Slow Morning. Today the gap-fill is purely positional.
 
 ## "The Off-Hours" name
 
@@ -36,6 +25,18 @@ Borderline corporate ("off-hours" is meeting-vocab). Not severe enough to rename
 ## Mobile
 
 Stage blocks, transition notes, and the shape strip use single-column layouts and `max-w-` constraints, but have not been opened in a real device emulator. Worth a 30-second spot-check at 375px before sending to Rob: focus on the transition note centering, the order-number/time-of-evening row at the top of each stage block, and the signal pill on the detail hero.
+
+## Admin dashboard items deferred
+
+Specific to the round-1 admin scaffold:
+
+- **No `/api/track` rate limit beyond size + allowlist.** A bored attacker could still flood `events` with valid event names. Add Upstash + token-bucket if traffic justifies it.
+- **PII in `briefs.her_description` is verbatim.** Admin Basic Auth is the only access control. Decide before sharing the dashboard with anyone outside Rob whether to truncate, anonymize, or move into a separate stricter table.
+- **Funnel doesn't deduplicate same-session repeated briefs.** A session that submits 3 briefs in a row counts as 1 session reaching `brief.submitted` (correct), but if you wanted "brief submission rate per session" the math is fine; if you wanted "% of *brief submissions* that became picks" the funnel SQL needs reshaping.
+- **Heatmap window is hardcoded to 30 days.** Add a date-range selector if Rob wants to scope.
+- **Bookings Kanban has no drag-and-drop.** Status advances via buttons. Drag would need `dnd-kit` or similar; not worth round-1 weight.
+- **`/admin/_actions.ts` server actions assume Basic Auth in proxy.** Documented in the file's header. A future refactor that splits these out could drop that assumption silently. Worth re-reading the comment before any change.
+- **Admin pages use `force-dynamic`** to bypass any caching. Each request hits the DB. Fine at this scale; revisit if response latencies grow.
 
 ## v1 sessionStorage keys still readable in long-lived tabs
 

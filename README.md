@@ -7,9 +7,10 @@ Encore designs evening **sequences**, not single recommendations. The system sel
 This is the demo MVP. One stakeholder will walk through it end-to-end. Quality bar is high; surface area is intentionally narrow.
 
 **Live:** https://encore-mocha-ten.vercel.app
+**Admin:** https://encore-mocha-ten.vercel.app/admin (Basic Auth, see `ADMIN_PASSWORD`)
 **Repo:** https://github.com/jdpalumbo2/encore
 **Stakeholder doc (binding):** [`CLAUDE.md`](./CLAUDE.md)
-**Build phases:** [`Buildplan.md`](./Buildplan.md) (Phases 0–6) and [`BUILDPLAN-V2.md`](./BUILDPLAN-V2.md) (Phases 7–10)
+**Build phases:** [`Buildplan.md`](./Buildplan.md) (Phases 0–6), [`BUILDPLAN-V2.md`](./BUILDPLAN-V2.md) (Phases 7–10), and the admin dashboard plan at `~/.claude/plans/robust-popping-liskov.md` (Phases A–F).
 **Open follow-ups:** [`FOLLOWUPS.md`](./FOLLOWUPS.md)
 
 ---
@@ -28,6 +29,7 @@ This is the demo MVP. One stakeholder will walk through it end-to-end. Quality b
 - [Styling system](#styling-system)
 - [Build, types, lint](#build-types-lint)
 - [Deploy pipeline](#deploy-pipeline)
+- [Admin dashboard](#admin-dashboard)
 - [Extending the system safely](#extending-the-system-safely)
 - [Decision log](#decision-log)
 - [Glossary](#glossary)
@@ -717,6 +719,52 @@ The expected error body when no key is set:
 ```json
 {"error":"The curation service isn't configured. ANTHROPIC_API_KEY is missing."}
 ```
+
+---
+
+## Admin dashboard
+
+A password-gated `/admin/*` area lives on the same domain. Five surfaces:
+
+| Route | What it shows |
+|---|---|
+| `/admin` | Five-tile overview: briefs last 7d, funnel completion %, top archetype 7d, bookings pending, spend last 24h |
+| `/admin/briefs` | Reverse-chronological table of every submitted brief, paginated 50/page, full text on row expand |
+| `/admin/funnel` | Per-step session counts and drop-off, last 24h and last 7d side-by-side |
+| `/admin/heatmap` | All eight archetypes + top 20 venues with shown vs. picked bars (last 30d) |
+| `/admin/bookings` | Three-column Kanban (Pending / Contacted / Confirmed) with status-advance buttons and per-card notes |
+| `/admin/costs` | Today's spend, requests, retry %, error %, plus a 7-day daily breakdown table |
+
+### Auth
+
+HTTP Basic Auth via Next 16 proxy (`proxy.ts`). Single `ADMIN_PASSWORD` env var checked against the `Authorization: Basic` header. Browser prompts natively; no login page. The proxy matcher gates `/admin/:path*` and `/api/admin/:path*` only — `/api/curate`, `/api/track`, and `/api/bookings` are open as designed.
+
+The same proxy also issues an `encore_sid` cookie (UUID v4, httpOnly, SameSite=Lax, Secure in prod) on customer-facing routes for telemetry session correlation. Cookie matcher excludes `/admin/*`.
+
+### Database
+
+Postgres on Railway (`encore` project). Connection in `DATABASE_URL`. Five tables:
+
+- `briefs` — every submitted intake (PII; admin-only)
+- `packages` — every package shown, with denormalized `archetype_id`, `shape[]`, `venue_ids[]` for cheap aggregation, plus full payload as `jsonb`. `selected_at` flips when the user clicks into the package detail page.
+- `events` — funnel events (`landing.viewed`, `plan.started`, `brief.submitted`, `package.selected`, `booking.confirmed`)
+- `bookings` — one row per "Book this evening" click, status `pending` | `contacted` | `confirmed`
+- `model_calls` — Anthropic API call records: input/output tokens, latency, retry flag, success/failure, error kind. Cost computed at read time from `lib/db/cost.ts`.
+
+Schema lives in `lib/db/schema.ts`. Drizzle ORM; `postgres` driver (`max: 1`, `idle_timeout: 20`). Migrate with `npm run db:push`.
+
+### Telemetry write pattern
+
+Every async DB write from a Vercel function MUST use `waitUntil(...)` from `@vercel/functions`. A bare `Promise.then` is silently dropped when the function exit returns the response. See `app/api/curate/route.ts` and `app/api/track/route.ts` for the pattern.
+
+### Required env vars
+
+| Var | Where set | Used for |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Vercel (prod + preview), `.env.local` | Curation engine |
+| `DATABASE_URL` | Vercel (prod), `.env.local` | All admin and telemetry surfaces |
+| `ADMIN_PASSWORD` | Vercel (prod), `.env.local` | `/admin/*` Basic Auth |
+| `NEXT_PUBLIC_SITE_URL` | Vercel (optional) | `metadataBase` for OG/canonical |
 
 ---
 
