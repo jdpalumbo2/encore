@@ -20,19 +20,19 @@ export default function Home() {
   return (
     <section className="mx-auto w-full max-w-[720px] px-6 pt-24 pb-20 sm:pt-32">
       <TrackOnMount event="landing.viewed" />
-      <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
+      <p className="font-sans text-[13px] tracking-[0.22em] text-brass-text uppercase">
         West Palm Beach. By invitation.
       </p>
       <h1 className="font-display font-medium text-4xl sm:text-5xl md:text-6xl text-primary mt-5 leading-[1.05]">
         Plan a night that says you&rsquo;ve been paying attention.
       </h1>
-      <p className="font-sans text-lg text-text-muted mt-6 leading-relaxed max-w-[560px]">
+      <p className="font-sans text-lg sm:text-xl text-text-muted mt-6 leading-relaxed max-w-[560px]">
         You bring the date. Encore handles the rest of the evening.
       </p>
       <div className="mt-10">
         <Link
           href="/plan"
-          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans text-base font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm min-h-[48px]"
         >
           Plan the night
         </Link>
@@ -42,12 +42,12 @@ export default function Home() {
         {specimens.map((s) => (
           <article
             key={s.header}
-            className="bg-background p-6 sm:p-7 flex flex-col gap-3"
+            className="bg-background p-7 sm:p-7 flex flex-col gap-3"
           >
-            <p className="font-display italic text-text text-base leading-snug">
+            <p className="font-display italic text-text text-lg leading-snug">
               {s.header}
             </p>
-            <p className="font-sans text-sm text-text-muted leading-relaxed">
+            <p className="font-sans text-base text-text-muted leading-relaxed">
               {s.line}
             </p>
           </article>

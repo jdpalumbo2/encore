@@ -67,7 +67,7 @@ function ConfirmInner() {
 
   return (
     <section className="mx-auto w-full max-w-[640px] px-6 pt-20 pb-24">
-      <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
+      <p className="font-sans text-[13px] tracking-[0.22em] text-brass-text uppercase">
         Confirmed
       </p>
       <h1 className="font-display font-medium text-5xl text-primary mt-5 leading-[1.05]">
@@ -75,7 +75,7 @@ function ConfirmInner() {
       </h1>
 
       <div className="mt-12 border border-hairline p-7 rounded-sm">
-        <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+        <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted">
           {pkg.archetypeName}
         </p>
         {firstStage && (
@@ -83,31 +83,31 @@ function ConfirmInner() {
             <h2 className="font-display font-medium text-2xl text-primary mt-3 leading-tight">
               {firstStage.venue.name}
             </h2>
-            <p className="font-sans text-text-muted mt-1">
+            <p className="font-sans text-base text-text-muted mt-1">
               {firstStage.venue.neighborhood}
             </p>
           </>
         )}
-        <p className="font-sans text-text mt-5">{whenLine}</p>
+        <p className="font-sans text-lg text-text mt-5">{whenLine}</p>
         {pkg.stages.length > 1 && lastStage && (
-          <p className="font-sans text-text-muted text-sm mt-2">
+          <p className="font-sans text-base text-text-muted mt-2">
             Ends with {lastStage.venue.name}.
           </p>
         )}
       </div>
 
-      <p className="font-sans text-text-muted mt-8 leading-relaxed">
+      <p className="font-sans text-base text-text-muted mt-8 leading-relaxed">
         Everything you need is on the previous page. Read it once on the way over.
       </p>
-      <p className="font-sans text-xs text-text-muted mt-3 italic">
+      <p className="font-sans text-sm text-text-muted mt-3 italic leading-relaxed">
         A 7% concierge fee is included and will appear itemized on your bill at the venue.
       </p>
-      <p className="font-display italic text-text-muted mt-4">Have fun.</p>
+      <p className="font-display italic text-text-muted text-lg mt-4">Have fun.</p>
 
       <div className="mt-12">
         <Link
           href="/"
-          className="font-sans text-sm text-text-muted hover:text-primary transition-colors rounded-sm py-1"
+          className="inline-block font-sans text-base text-text-muted hover:text-primary transition-colors rounded-sm px-2 py-2 -mx-2"
         >
           Plan another evening &rarr;
         </Link>
@@ -122,13 +122,13 @@ function MissingState() {
       <p className="font-display font-medium text-3xl text-primary leading-tight">
         Nothing to confirm yet.
       </p>
-      <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
+      <p className="font-sans text-base text-text-muted mt-3 max-w-[440px] mx-auto leading-relaxed">
         Start with a brief and pick a night first.
       </p>
       <div className="mt-8">
         <Link
           href="/plan"
-          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans text-base font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm min-h-[48px]"
         >
           Start the brief
         </Link>

@@ -69,37 +69,37 @@ export default async function CostsPage() {
       <h1 className="font-display font-medium text-3xl text-primary leading-tight">
         Costs
       </h1>
-      <p className="font-sans text-sm text-text-muted mt-2">
+      <p className="font-sans text-base text-text-muted mt-2 leading-relaxed">
         Anthropic API usage. Pricing is hardcoded at $3 / $15 per 1M input /
-        output tokens; update <code className="text-text">lib/db/cost.ts</code> if Anthropic changes it.
+        output tokens; update <code className="text-text font-mono text-[15px]">lib/db/cost.ts</code> if Anthropic changes it.
       </p>
 
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-px bg-hairline border border-hairline">
         <div className="bg-background p-6 flex flex-col gap-2">
-          <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+          <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted">
             Spend today
           </p>
           <p className="font-display font-medium text-3xl text-primary">
             {formatUsd(todayCost)}
           </p>
-          <p className="font-sans text-xs text-text-muted">
+          <p className="font-sans text-sm text-text-muted leading-relaxed">
             {today.input_tokens.toLocaleString()} in /{" "}
             {today.output_tokens.toLocaleString()} out tokens.
           </p>
         </div>
         <div className="bg-background p-6 flex flex-col gap-2">
-          <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+          <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted">
             Requests today
           </p>
           <p className="font-display font-medium text-3xl text-primary">
             {today.requests}
           </p>
-          <p className="font-sans text-xs text-text-muted">
+          <p className="font-sans text-sm text-text-muted leading-relaxed">
             {pct(today.retries, today.requests)} retried · {pct(today.errors, today.requests)} errored.
           </p>
         </div>
         <div className="bg-background p-6 flex flex-col gap-2">
-          <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+          <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted">
             Spend last 7 days
           </p>
           <p className="font-display font-medium text-3xl text-primary">
@@ -110,7 +110,7 @@ export default async function CostsPage() {
               ),
             )}
           </p>
-          <p className="font-sans text-xs text-text-muted">
+          <p className="font-sans text-sm text-text-muted leading-relaxed">
             Across{" "}
             {daily.reduce((acc, d) => acc + d.requests, 0).toLocaleString()}{" "}
             requests.
@@ -119,13 +119,14 @@ export default async function CostsPage() {
       </div>
 
       <div className="mt-10">
-        <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+        <h2 className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted font-normal">
           Daily breakdown (last 7 days)
-        </p>
-        <table className="mt-3 w-full font-sans text-sm border border-hairline rounded-sm">
+        </h2>
+        <table className="mt-3 w-full font-sans text-[15px] border border-hairline rounded-sm">
+          <caption className="sr-only">Daily Anthropic usage breakdown</caption>
           <thead className="bg-surface">
             <tr className="text-left">
-              <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">Day</th>
+              <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">Day</th>
               <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal text-right">Requests</th>
               <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal text-right">Retries</th>
               <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal text-right">Errors</th>
@@ -137,7 +138,7 @@ export default async function CostsPage() {
           <tbody>
             {daily.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 font-display italic text-text-muted text-center">
+                <td colSpan={7} className="px-4 py-6 font-display italic text-text-muted text-center text-base">
                   No requests yet.
                 </td>
               </tr>

@@ -50,13 +50,14 @@ function FunnelTable({ row, label }: { row: FunnelRow; label: string }) {
   const top = row.reached_plan;
   return (
     <div>
-      <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+      <h2 className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted font-normal">
         {label}
-      </p>
-      <table className="mt-3 w-full font-sans text-sm border border-hairline rounded-sm">
+      </h2>
+      <table className="mt-3 w-full font-sans text-[15px] border border-hairline rounded-sm">
+        <caption className="sr-only">{label} funnel</caption>
         <thead className="bg-surface">
           <tr className="text-left">
-            <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+            <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
               Step
             </th>
             <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal text-right">
@@ -105,7 +106,7 @@ export default async function FunnelPage() {
       <h1 className="font-display font-medium text-3xl text-primary leading-tight">
         Funnel
       </h1>
-      <p className="font-sans text-sm text-text-muted mt-2">
+      <p className="font-sans text-base text-text-muted mt-2 leading-relaxed">
         Sessions per step. A session is one cookie; one user can churn through
         the flow multiple times in different tabs.
       </p>

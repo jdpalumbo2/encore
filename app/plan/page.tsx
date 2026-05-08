@@ -83,24 +83,28 @@ export default function PlanPage() {
 
   return (
     <section className="mx-auto w-full max-w-[640px] px-6 pt-16 pb-24">
-      <div className="flex items-center justify-between font-sans text-xs tracking-[0.18em] uppercase text-text-muted">
+      <div className="flex items-center justify-between font-sans text-[13px] tracking-[0.18em] uppercase text-text-muted">
         <div>
           {step > 1 ? (
             <button
               onClick={back}
-              className="hover:text-primary transition-colors py-1 rounded-sm"
+              className="hover:text-primary transition-colors px-2 py-2 -mx-2 rounded-sm"
               type="button"
               disabled={submitting}
             >
               &larr; Back
             </button>
           ) : (
-            <Link href="/" className="hover:text-primary transition-colors py-1 rounded-sm">
+            <Link
+              href="/"
+              className="hover:text-primary transition-colors px-2 py-2 -mx-2 rounded-sm inline-block"
+            >
               &larr; Home
             </Link>
           )}
         </div>
-        <div aria-live="polite">
+        <div aria-live="polite" aria-atomic="true">
+          <span className="sr-only">Step </span>
           {step} of {total}
         </div>
       </div>
@@ -165,7 +169,7 @@ export default function PlanPage() {
                     <div className="font-display font-medium text-lg text-primary">
                       {o.label}
                     </div>
-                    <div className="font-sans text-sm text-text-muted mt-1">
+                    <div className="font-sans text-[15px] text-text-muted mt-1 leading-relaxed">
                       {o.sub}
                     </div>
                   </button>
@@ -197,7 +201,7 @@ export default function PlanPage() {
                     <div className="font-display font-medium text-lg text-primary">
                       {o.label}
                     </div>
-                    <div className="font-sans text-sm text-text-muted">{o.sub}</div>
+                    <div className="font-sans text-[15px] text-text-muted">{o.sub}</div>
                   </button>
                 );
               })}
@@ -229,7 +233,7 @@ export default function PlanPage() {
             onClick={next}
             disabled={!canAdvance}
             className={cn(
-              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] transition-colors rounded-sm",
+              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans text-base font-semibold tracking-[0.02em] transition-colors rounded-sm min-h-[48px]",
               canAdvance ? "hover:bg-brass-hover" : "opacity-40 cursor-not-allowed",
             )}
           >
@@ -241,7 +245,7 @@ export default function PlanPage() {
             onClick={submit}
             disabled={submitting}
             className={cn(
-              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] transition-colors rounded-sm",
+              "inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans text-base font-semibold tracking-[0.02em] transition-colors rounded-sm min-h-[48px]",
               submitting ? "opacity-60 cursor-wait" : "hover:bg-brass-hover",
             )}
           >
@@ -268,7 +272,7 @@ function Step({
         {lead}
       </h2>
       {sub && (
-        <p className="font-sans text-sm text-text-muted mt-3 leading-relaxed">
+        <p className="font-sans text-base text-text-muted mt-3 leading-relaxed">
           {sub}
         </p>
       )}

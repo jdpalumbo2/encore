@@ -90,57 +90,61 @@ function truncate(s: string, n: number): string {
 
 function Card({ b }: { b: CardRow }) {
   const col = COLUMNS.find((c) => c.status === b.status);
+  const noteInputId = `note-${b.id}`;
   return (
-    <article className="bg-background border border-hairline rounded-sm p-4 flex flex-col gap-3">
-      <div className="flex items-baseline justify-between font-sans text-xs uppercase tracking-[0.14em] text-text-muted">
-        <span>{b.archetypeName}</span>
-        <span>{formatRelativeShort(b.updatedAt)}</span>
+    <article className="bg-background border border-hairline rounded-sm p-5 flex flex-col gap-3">
+      <div className="flex items-baseline justify-between gap-2 font-sans text-[12px] uppercase tracking-[0.14em] text-text-muted">
+        <span className="truncate">{b.archetypeName}</span>
+        <time className="whitespace-nowrap" dateTime={b.updatedAt.toISOString()}>
+          {formatRelativeShort(b.updatedAt)}
+        </time>
       </div>
       {b.firstVenueName && (
-        <p className="font-display font-medium text-base text-primary leading-tight">
+        <p className="font-display font-medium text-lg text-primary leading-tight">
           {b.firstVenueName}
         </p>
       )}
-      <p className="font-sans text-xs text-text-muted">
+      <p className="font-sans text-sm text-text-muted">
         {b.whenText} · {b.vibe} · {b.budget}
       </p>
-      <p className="font-sans text-sm text-text leading-snug">
-        {truncate(b.herDescription, 120)}
+      <p className="font-sans text-[15px] text-text leading-relaxed">
+        {truncate(b.herDescription, 140)}
       </p>
 
       {b.notes && (
-        <p className="font-sans text-xs text-text-muted italic border-l border-brass pl-3">
+        <p className="font-sans text-sm text-text-muted italic border-l-2 border-brass pl-3 leading-relaxed">
           {b.notes}
         </p>
       )}
 
-      <form
-        action={setBookingNote}
-        className="flex items-center gap-2 mt-1"
-      >
+      <form action={setBookingNote} className="flex items-center gap-2 mt-1">
         <input type="hidden" name="id" value={b.id} />
+        <label className="sr-only" htmlFor={noteInputId}>
+          Note for {b.archetypeName} booking
+        </label>
         <input
+          id={noteInputId}
           name="note"
           defaultValue={b.notes ?? ""}
           placeholder="Add note"
-          className="flex-1 bg-surface border border-hairline px-2 py-1 font-sans text-xs text-text rounded-sm focus:outline-none focus:border-primary"
+          className="flex-1 bg-surface border border-hairline px-3 py-2 font-sans text-sm text-text rounded-sm focus:outline-none focus:border-primary min-h-[40px]"
         />
         <button
           type="submit"
-          className="font-sans text-xs uppercase tracking-[0.14em] text-text-muted hover:text-primary py-1"
+          className="font-sans text-sm uppercase tracking-[0.12em] text-text-muted hover:text-primary px-2 py-2 rounded-sm"
         >
           Save
         </button>
       </form>
 
-      <div className="flex items-center justify-between mt-1">
+      <div className="flex items-center justify-between gap-2 mt-1 flex-wrap">
         {col?.nextStatus && col.nextLabel && (
           <form action={setBookingStatus}>
             <input type="hidden" name="id" value={b.id} />
             <input type="hidden" name="status" value={col.nextStatus} />
             <button
               type="submit"
-              className="font-sans text-xs font-semibold tracking-[0.02em] bg-brass text-primary px-3 py-1.5 rounded-sm hover:bg-brass-hover transition-colors"
+              className="font-sans text-sm font-semibold tracking-[0.02em] bg-brass text-primary px-4 py-2 rounded-sm hover:bg-brass-hover transition-colors min-h-[40px]"
             >
               {col.nextLabel}
             </button>
@@ -156,7 +160,7 @@ function Card({ b }: { b: CardRow }) {
             />
             <button
               type="submit"
-              className="font-sans text-xs uppercase tracking-[0.14em] text-text-muted hover:text-primary"
+              className="font-sans text-sm uppercase tracking-[0.12em] text-text-muted hover:text-primary px-2 py-2 rounded-sm"
             >
               ← back
             </button>
@@ -178,7 +182,7 @@ export default async function BookingsPage() {
       <h1 className="font-display font-medium text-3xl text-primary leading-tight">
         Bookings
       </h1>
-      <p className="font-sans text-sm text-text-muted mt-2">
+      <p className="font-sans text-base text-text-muted mt-2 leading-relaxed">
         {all.length.toLocaleString()} total. Advance status with the buttons. No
         drag-and-drop in round one.
       </p>
@@ -189,13 +193,13 @@ export default async function BookingsPage() {
           return (
             <div key={c.status} className="flex flex-col gap-4">
               <div className="flex items-baseline justify-between border-b border-hairline pb-2">
-                <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+                <h2 className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted font-normal">
                   {c.label}
-                </p>
-                <p className="font-sans text-xs text-text-muted">{items.length}</p>
+                </h2>
+                <p className="font-sans text-sm text-text-muted">{items.length}</p>
               </div>
               {items.length === 0 ? (
-                <p className="font-display italic text-text-muted text-sm">
+                <p className="font-display italic text-text-muted text-base">
                   Nothing here.
                 </p>
               ) : (

@@ -48,35 +48,36 @@ export default async function BriefsPage({ searchParams }: PageProps) {
       <h1 className="font-display font-medium text-3xl text-primary leading-tight">
         Briefs
       </h1>
-      <p className="font-sans text-sm text-text-muted mt-2">
+      <p className="font-sans text-base text-text-muted mt-2">
         {total.toLocaleString()} total. Page {page} of {totalPages}.
       </p>
 
       {rows.length === 0 ? (
-        <p className="font-display italic text-text-muted mt-12">
+        <p className="font-display italic text-text-muted text-lg mt-12">
           No briefs yet.
         </p>
       ) : (
         <div className="mt-8 border border-hairline rounded-sm overflow-x-auto">
-          <table className="w-full font-sans text-sm">
+          <table className="w-full font-sans text-[15px]">
+            <caption className="sr-only">Submitted briefs, most recent first.</caption>
             <thead className="bg-surface">
               <tr className="text-left">
-                <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+                <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   When submitted
                 </th>
-                <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+                <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   Vibe
                 </th>
-                <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+                <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   Budget
                 </th>
-                <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+                <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   When
                 </th>
-                <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+                <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   About her
                 </th>
-                <th className="px-4 py-3 text-xs uppercase tracking-[0.14em] text-text-muted font-normal">
+                <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   Avoid
                 </th>
               </tr>
@@ -111,11 +112,14 @@ export default async function BriefsPage({ searchParams }: PageProps) {
       )}
 
       {totalPages > 1 && (
-        <div className="mt-6 flex items-center justify-between font-sans text-sm">
+        <nav
+          aria-label="Brief pagination"
+          className="mt-6 flex items-center justify-between font-sans text-base"
+        >
           {page > 1 ? (
             <Link
               href={`/admin/briefs?page=${page - 1}`}
-              className="text-text-muted hover:text-primary"
+              className="text-text-muted hover:text-primary rounded-sm px-2 py-2 -mx-2"
             >
               ← Newer
             </Link>
@@ -125,14 +129,14 @@ export default async function BriefsPage({ searchParams }: PageProps) {
           {page < totalPages ? (
             <Link
               href={`/admin/briefs?page=${page + 1}`}
-              className="text-text-muted hover:text-primary"
+              className="text-text-muted hover:text-primary rounded-sm px-2 py-2 -mx-2"
             >
               Older →
             </Link>
           ) : (
             <span />
           )}
-        </div>
+        </nav>
       )}
     </section>
   );

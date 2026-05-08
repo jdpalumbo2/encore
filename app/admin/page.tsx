@@ -114,7 +114,7 @@ export default async function AdminOverview() {
       <h1 className="font-display font-medium text-3xl text-primary leading-tight">
         Overview
       </h1>
-      <p className="font-sans text-sm text-text-muted mt-2">
+      <p className="font-sans text-base text-text-muted mt-2 leading-relaxed">
         At a glance. All windows are last 7 days unless noted.
       </p>
 
@@ -125,14 +125,14 @@ export default async function AdminOverview() {
             href={t.href}
             className="bg-background p-6 hover:bg-surface transition-colors flex flex-col gap-2"
           >
-            <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+            <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted">
               {t.label}
             </p>
             <p className="font-display font-medium text-3xl text-primary leading-tight">
               {t.value}
             </p>
             {t.hint && (
-              <p className="font-sans text-xs text-text-muted">{t.hint}</p>
+              <p className="font-sans text-sm text-text-muted leading-relaxed">{t.hint}</p>
             )}
           </Link>
         ))}

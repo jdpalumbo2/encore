@@ -48,52 +48,52 @@ export default function PackagePage() {
     <article className="mx-auto w-full max-w-[720px] px-6 pt-12 pb-24">
       <Link
         href="/results"
-        className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted hover:text-primary transition-colors rounded-sm py-1"
+        className="inline-block font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted hover:text-primary transition-colors rounded-sm px-2 py-2 -mx-2"
       >
         &larr; The other two
       </Link>
 
       <header className="mt-10">
-        <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
+        <p className="font-sans text-[13px] tracking-[0.22em] text-brass-text uppercase">
           {pkg.archetypeName}
         </p>
         <h1 className="font-display font-medium text-4xl sm:text-5xl text-primary mt-4 leading-[1.05]">
           {pkg.headline}
         </h1>
         <div className="mt-5">
-          <span className="inline-flex font-sans text-[12px] uppercase tracking-[0.14em] text-brass border border-brass/60 px-3 py-1.5 rounded-sm">
+          <span className="inline-flex font-sans text-[13px] uppercase tracking-[0.14em] text-brass-text border border-brass/70 px-3 py-1.5 rounded-sm">
             {pkg.signal}
           </span>
         </div>
       </header>
 
       <Section label="The evening">
-        <p className="font-display text-text text-xl leading-[1.5]">
+        <p className="font-display text-text text-xl sm:text-[22px] leading-[1.55]">
           {pkg.narrative}
         </p>
       </Section>
 
       <Section label="The sequence">
-        <div className="mt-2">
+        <ol className="mt-2 list-none p-0 space-y-0">
           {pkg.stages.map((stage, i) => (
-            <div key={stage.order}>
+            <li key={stage.order}>
               <StageBlock stage={stage} />
               {i < pkg.stages.length - 1 && stage.transition && (
                 <div className="my-7 flex items-start justify-center gap-2 max-w-[420px] mx-auto">
                   <span
-                    className="text-brass leading-none mt-[6px]"
+                    className="text-brass-text leading-none mt-[6px]"
                     aria-hidden="true"
                   >
                     &bull;
                   </span>
-                  <p className="font-display italic text-text-muted text-sm text-center leading-relaxed">
+                  <p className="font-display italic text-text-muted text-base text-center leading-relaxed">
                     {stage.transition}
                   </p>
                 </div>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </Section>
 
       <Section label="Two things to ask her about">
@@ -101,7 +101,7 @@ export default function PackagePage() {
           {pkg.conversationStarters.map((s, i) => (
             <li
               key={i}
-              className="font-display italic text-text text-lg leading-snug pl-5 border-l border-brass"
+              className="font-display italic text-text text-xl leading-snug pl-5 border-l-2 border-brass"
             >
               {s}
             </li>
@@ -110,14 +110,16 @@ export default function PackagePage() {
       </Section>
 
       <Section label="One thing to skip tonight">
-        <p className="font-sans text-text-muted">{pkg.dontBringUp}</p>
+        <p className="font-sans text-base text-text-muted leading-relaxed">
+          {pkg.dontBringUp}
+        </p>
       </Section>
 
       <Section label="What this evening costs">
         <p className="font-display font-medium text-2xl text-primary">
           {formatPriceEstimate(pkg.priceEstimate)}
         </p>
-        <p className="font-sans text-xs text-text-muted mt-2 italic">
+        <p className="font-sans text-sm text-text-muted mt-2 italic leading-relaxed">
           {pkg.priceEstimate.conciergeFeeNote}
         </p>
       </Section>
@@ -125,13 +127,13 @@ export default function PackagePage() {
       <div className="mt-16 flex flex-col items-stretch gap-4">
         <Link
           href={`/confirm?packageId=${pkg.id}`}
-          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors text-center rounded-sm"
+          className="inline-flex items-center justify-center bg-brass text-primary px-8 py-4 font-sans text-base font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors text-center rounded-sm min-h-[52px]"
         >
           Book this evening &middot; {formatPriceEstimate(pkg.priceEstimate)}
         </Link>
         <Link
           href="/results"
-          className="font-sans text-sm text-text-muted hover:text-primary transition-colors text-center rounded-sm py-1"
+          className="font-sans text-base text-text-muted hover:text-primary transition-colors text-center rounded-sm py-2"
         >
           See the other two
         </Link>
@@ -148,10 +150,13 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mt-12">
-      <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+    <section className="mt-12" aria-labelledby={`section-${label.replace(/\s+/g, "-").toLowerCase()}`}>
+      <h2
+        id={`section-${label.replace(/\s+/g, "-").toLowerCase()}`}
+        className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted font-normal"
+      >
         {label}
-      </p>
+      </h2>
       <div className="mt-4">{children}</div>
     </section>
   );
@@ -162,14 +167,17 @@ function StageBlock({ stage }: { stage: PackageStage }) {
   const practical = [venue.dressCode, venue.parking].filter(Boolean).join(" · ");
   return (
     <div className="border border-hairline p-6 rounded-sm">
-      <div className="flex items-baseline gap-3">
-        <span className="font-sans text-xs tracking-[0.18em] text-brass">
+      <div className="flex items-baseline gap-3 flex-wrap">
+        <span
+          className="font-sans text-[13px] tracking-[0.18em] text-brass-text font-semibold"
+          aria-label={`Stage ${stage.order}`}
+        >
           {formatStageOrder(stage.order)}
         </span>
-        <span className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+        <span className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted">
           {stageLabel(stage.kind)}
         </span>
-        <span className="font-sans text-xs text-text-muted ml-auto">
+        <span className="font-sans text-sm text-text-muted ml-auto">
           {stage.timeOfEvening}
         </span>
       </div>
@@ -179,17 +187,19 @@ function StageBlock({ stage }: { stage: PackageStage }) {
       <p className="font-sans text-sm text-text-muted mt-1">
         {venue.neighborhood} &middot; {venue.priceTier} &middot; {venue.typicalDuration}
       </p>
-      <p className="font-display italic text-text-muted mt-4 leading-relaxed">
+      <p className="font-display italic text-text-muted text-lg mt-4 leading-relaxed">
         {stage.why}
       </p>
-      <p className="font-sans text-sm text-text-muted mt-3 leading-relaxed">
+      <p className="font-sans text-base text-text-muted mt-3 leading-relaxed">
         {venue.blurb}
       </p>
       {practical && (
-        <p className="font-sans text-xs text-text-muted mt-4">{practical}</p>
+        <p className="font-sans text-sm text-text-muted mt-4 leading-relaxed">
+          {practical}
+        </p>
       )}
       {venue.reservationNote && (
-        <p className="font-sans text-xs text-text-muted mt-2 italic">
+        <p className="font-sans text-sm text-text-muted mt-2 italic leading-relaxed">
           {venue.reservationNote}
         </p>
       )}
@@ -200,19 +210,19 @@ function StageBlock({ stage }: { stage: PackageStage }) {
 function MissingState() {
   return (
     <section className="mx-auto w-full max-w-[640px] px-6 py-24 text-center">
-      <p className="font-sans text-xs tracking-[0.22em] text-brass uppercase">
+      <p className="font-sans text-[13px] tracking-[0.22em] text-brass-text uppercase">
         Nothing to show
       </p>
       <p className="font-display font-medium text-3xl text-primary mt-4 leading-tight">
         We need a brief first.
       </p>
-      <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
+      <p className="font-sans text-base text-text-muted mt-3 max-w-[440px] mx-auto leading-relaxed">
         Five quick questions and you&rsquo;ll have three evenings to pick from.
       </p>
       <div className="mt-8">
         <Link
           href="/plan"
-          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans text-base font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm min-h-[48px]"
         >
           Start the brief
         </Link>
@@ -227,19 +237,19 @@ function NotFoundState() {
       <p className="font-display font-medium text-3xl text-primary leading-tight">
         That one isn&rsquo;t in the set.
       </p>
-      <p className="font-sans text-text-muted mt-3 max-w-[440px] mx-auto">
+      <p className="font-sans text-base text-text-muted mt-3 max-w-[440px] mx-auto leading-relaxed">
         Pick from the three on offer, or start a fresh brief.
       </p>
-      <div className="mt-8 flex items-center justify-center gap-4">
+      <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
         <Link
           href="/results"
-          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm"
+          className="inline-flex items-center justify-center bg-brass text-primary px-7 py-3 font-sans text-base font-semibold tracking-[0.02em] hover:bg-brass-hover transition-colors rounded-sm min-h-[48px]"
         >
           Back to the three
         </Link>
         <Link
           href="/plan"
-          className="font-sans text-sm text-text-muted hover:text-primary transition-colors rounded-sm py-1"
+          className="font-sans text-base text-text-muted hover:text-primary transition-colors rounded-sm px-2 py-2"
         >
           New brief
         </Link>

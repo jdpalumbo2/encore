@@ -63,10 +63,27 @@ async function venueCounts(): Promise<CountRow[]> {
   });
 }
 
-function Bar({ value, max, color }: { value: number; max: number; color: "brass" | "navy" }) {
+function Bar({
+  value,
+  max,
+  color,
+  label,
+}: {
+  value: number;
+  max: number;
+  color: "brass" | "navy";
+  label: string;
+}) {
   const pct = max === 0 ? 0 : Math.round((value / max) * 100);
   return (
-    <div className="h-1.5 bg-hairline rounded-sm overflow-hidden">
+    <div
+      className="h-2 bg-hairline rounded-sm overflow-hidden"
+      role="meter"
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={max}
+      aria-label={label}
+    >
       <div
         className={color === "brass" ? "h-full bg-brass" : "h-full bg-primary"}
         style={{ width: `${pct}%` }}
@@ -85,26 +102,36 @@ function HeatmapTable({
   const maxShown = Math.max(1, ...rows.map((r) => r.shown));
   return (
     <div>
-      <p className="font-sans text-xs uppercase tracking-[0.18em] text-text-muted">
+      <h2 className="font-sans text-[13px] uppercase tracking-[0.18em] text-text-muted font-normal">
         {title}
-      </p>
+      </h2>
       <div className="mt-3 border border-hairline rounded-sm divide-y divide-hairline">
         {rows.length === 0 && (
-          <p className="px-4 py-6 font-display italic text-text-muted">
+          <p className="px-4 py-6 font-display italic text-text-muted text-lg">
             No data yet.
           </p>
         )}
         {rows.map((r) => (
           <div key={r.key} className="px-4 py-3 flex flex-col gap-2">
-            <div className="flex items-baseline justify-between gap-4 font-sans text-sm">
+            <div className="flex items-baseline justify-between gap-4 font-sans text-[15px]">
               <span className="text-text truncate">{r.key}</span>
               <span className="text-text-muted whitespace-nowrap">
                 shown {r.shown} · picked {r.picked}
               </span>
             </div>
             <div className="flex flex-col gap-1">
-              <Bar value={r.shown} max={maxShown} color="navy" />
-              <Bar value={r.picked} max={maxShown} color="brass" />
+              <Bar
+                value={r.shown}
+                max={maxShown}
+                color="navy"
+                label={`${r.key}: shown ${r.shown} of max ${maxShown}`}
+              />
+              <Bar
+                value={r.picked}
+                max={maxShown}
+                color="brass"
+                label={`${r.key}: picked ${r.picked} of max ${maxShown}`}
+              />
             </div>
           </div>
         ))}
@@ -124,7 +151,7 @@ export default async function HeatmapPage() {
       <h1 className="font-display font-medium text-3xl text-primary leading-tight">
         Heatmap
       </h1>
-      <p className="font-sans text-sm text-text-muted mt-2">
+      <p className="font-sans text-base text-text-muted mt-2 leading-relaxed">
         Last 30 days. Navy bar is shown frequency, brass bar is picked frequency
         (where the user clicked into the package).
       </p>
