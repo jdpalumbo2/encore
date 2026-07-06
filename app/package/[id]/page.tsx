@@ -96,7 +96,7 @@ export default function PackagePage() {
         </ol>
       </Section>
 
-      <Section label="Two things to ask her about">
+      <Section label="Two things to ask them about">
         <ul className="space-y-3 list-none pl-0">
           {pkg.conversationStarters.map((s, i) => (
             <li

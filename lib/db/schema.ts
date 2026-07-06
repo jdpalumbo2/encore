@@ -11,8 +11,8 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-// Note: `briefs.her_description` contains free-form user input that frequently
-// includes a real woman's name and personal details. Treat as PII. The only
+// Note: `briefs.guest_description` contains free-form user input that frequently
+// includes a real person's name and personal details. Treat as PII. The only
 // read path is gated by Basic Auth on /admin/*. See README "Privacy" section.
 export const briefs = pgTable(
   "briefs",
@@ -22,7 +22,7 @@ export const briefs = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    herDescription: text("her_description").notNull(),
+    guestDescription: text("guest_description").notNull(),
     whenText: text("when_text").notNull(),
     vibe: text("vibe").notNull(),
     budget: text("budget").notNull(),

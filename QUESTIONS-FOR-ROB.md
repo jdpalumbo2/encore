@@ -32,7 +32,7 @@ Two text messages for Johnny to send Rob. The first sets context. The second has
 
 > **1. Where do we ask for the email?**
 >
-> The morning-after email is the easy half of your follow-up idea. The hard half is, we have to capture the email somewhere before we can send it. Right now we ask for nothing personal except the description of her. Three options:
+> The morning-after email is the easy half of your follow-up idea. The hard half is, we have to capture the email somewhere before we can send it. Right now we ask for nothing personal except the description of the guest. Three options:
 >
 > A. Add an email field as a sixth step in the intake form, before they see the three options.
 >

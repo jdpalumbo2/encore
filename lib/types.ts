@@ -100,7 +100,7 @@ export interface Package {
 }
 
 export interface IntakeAnswers {
-  herDescription: string;
+  guestDescription: string;
   when: string;
   vibe: "relaxed" | "special" | "adventurous" | "classic";
   budget: "comfortable" | "elevated" | "no-ceiling";

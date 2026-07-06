@@ -283,7 +283,7 @@ export const venues: Venue[] = [
     blurb:
       "Foster + Partners renovation, an O'Keeffe, a Pollock, a sculpture garden you'll wish was twice the size. Thursday evenings are the move.",
     bestFor:
-      "Before dinner, when she mentioned she likes museums and you'd like to find out what she means.",
+      "Before dinner, when your guest mentioned liking museums and you'd like to find out what that means.",
     parking: "Lot at the museum.",
     reservationNote: "Free admission Thursdays after 5pm. South Dixie at Cranesnest.",
     typicalDuration: "60 to 90 minutes",
@@ -419,7 +419,7 @@ export const venues: Venue[] = [
     blurb:
       "An independent on Worth, well-stocked, owner there most days. Buy something. They will wrap it for you if you ask.",
     bestFor:
-      "An after-coffee hour. A way to find out what she's reading by watching what she picks up.",
+      "An after-coffee hour. A way to find out what your guest is reading by watching what they pick up.",
     parking: "Worth Avenue lot, around the corner.",
     typicalDuration: "30 to 45 minutes",
   },
@@ -471,7 +471,7 @@ export const archetypes: Archetype[] = [
     description: "An hour with something on a wall, then a drink to talk about what you saw.",
     shape: ["cultural", "cocktails"],
     signal: "Curiosity and substance.",
-    bestFor: "Thoughtful women, second or third dates, anyone bored by standard dinners.",
+    bestFor: "Thoughtful company, second or third dates, anyone bored by standard dinners.",
     intensity: "medium",
     timeOfDay: "evening",
   },
@@ -483,7 +483,7 @@ export const archetypes: Archetype[] = [
     shape: ["water", "dinner", "nightcap"],
     signal: "Generosity and time.",
     bestFor:
-      "Anniversaries, women who appreciate scale, anyone who needs to make up for something.",
+      "Anniversaries, guests who appreciate scale, anyone who needs to make up for something.",
     intensity: "high",
     timeOfDay: "evening",
   },
@@ -513,7 +513,7 @@ export const archetypes: Archetype[] = [
     description: "An hour doing something side by side, then a meal you both earned.",
     shape: ["activity", "dinner"],
     signal: "Energy and ease.",
-    bestFor: "Athletic women, people who hate small talk, anyone who connects through doing.",
+    bestFor: "Athletic types, people who hate small talk, anyone who connects through doing.",
     intensity: "medium",
     timeOfDay: "daytime",
   },
@@ -523,7 +523,7 @@ export const archetypes: Archetype[] = [
     description: "Two rooms, both quiet on purpose. The whole night is the conversation.",
     shape: ["dinner", "nightcap"],
     signal: "Attention and care.",
-    bestFor: "Deep conversation, third date and beyond, women who like to be heard.",
+    bestFor: "Deep conversation, third date and beyond, anyone who likes to be heard.",
     intensity: "low",
     timeOfDay: "evening",
   },

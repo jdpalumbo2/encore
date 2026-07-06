@@ -80,7 +80,7 @@ export default async function BriefsPage({ searchParams }: PageProps) {
                   When
                 </th>
                 <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
-                  About her
+                  About the guest
                 </th>
                 <th className="px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-text-muted font-semibold">
                   Avoid
@@ -99,10 +99,10 @@ export default async function BriefsPage({ searchParams }: PageProps) {
                   <td className="px-4 py-3 text-text max-w-[420px]">
                     <details>
                       <summary className="cursor-pointer">
-                        {truncate(r.herDescription, 100)}
+                        {truncate(r.guestDescription, 100)}
                       </summary>
                       <p className="mt-2 text-text-muted whitespace-pre-wrap">
-                        {r.herDescription}
+                        {r.guestDescription}
                       </p>
                     </details>
                   </td>

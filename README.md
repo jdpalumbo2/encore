@@ -1,6 +1,6 @@
 # Encore
 
-> A date concierge for older men in West Palm Beach. The user describes a date, gets three structurally different evenings, picks one, and mock-confirms.
+> A date concierge for older adults in West Palm Beach. The user describes a date, gets three structurally different evenings, picks one, and mock-confirms.
 
 Encore designs evening **sequences**, not single recommendations. The system selects from eight archetypes (The Classic, The Long Walk, The Quiet Room, The Big Swing, The Salon, The Outing, The Off-Hours, The Slow Morning) and instantiates each with real West Palm venues. The user sees three structurally different evenings — different shapes, different rooms, different signals — and the differentiation is the entire point.
 
@@ -38,7 +38,7 @@ This is the demo MVP. One stakeholder will walk through it end-to-end. Quality b
 
 ## What this is
 
-A web app that translates a short, free-form brief about a date (who she is, when, what kind of night, budget, anything to avoid) into three structurally different evenings in West Palm Beach. Each evening is an instantiation of an **archetype** (a template for an evening's shape) filled stage-by-stage with real venues from a hand-curated seed list. The user sees the archetype name, the sequence of stages (e.g., `Cocktails – Dinner – Nightcap`), a one-sentence headline calibrated to her, and a signal phrase (e.g., "Patience and taste"). On the detail page they get the full sequence with a numbered stage block per venue, transition lines between stages, two specific conversation starters tuned to her, one thing to skip tonight, and a price estimate with a concierge-fee disclosure.
+A web app that translates a short, free-form brief about a date (who the guest is, when, what kind of night, budget, anything to avoid) into three structurally different evenings in West Palm Beach. Each evening is an instantiation of an **archetype** (a template for an evening's shape) filled stage-by-stage with real venues from a hand-curated seed list. The user sees the archetype name, the sequence of stages (e.g., `Cocktails – Dinner – Nightcap`), a one-sentence headline calibrated to the guest, and a signal phrase (e.g., "Patience and taste"). On the detail page they get the full sequence with a numbered stage block per venue, transition lines between stages, two specific conversation starters tuned to the guest, one thing to skip tonight, and a price estimate with a concierge-fee disclosure.
 
 The product is positioned to feel like a friend's recommendation, not an AI tool. The voice is the hardest part. See [`CLAUDE.md`](./CLAUDE.md) — the section labeled "Voice" is binding.
 
@@ -288,7 +288,7 @@ interface Package {
   id: string;                 // matches archetypeId (one of the eight)
   archetypeId: string;
   archetypeName: string;      // denormalized
-  headline: string;           // one sentence calibrated to her
+  headline: string;           // one sentence calibrated to the guest
   signal: string;             // 2-4 word phrase tuned to this date
   stages: PackageStage[];     // 2-4 stages
   narrative: string;          // 3-5 sentences
@@ -303,7 +303,7 @@ interface Package {
 }
 
 interface IntakeAnswers {
-  herDescription: string;
+  guestDescription: string;
   when: string;
   vibe: "relaxed" | "special" | "adventurous" | "classic";
   budget: "comfortable" | "elevated" | "no-ceiling";
@@ -375,7 +375,7 @@ POST /api/curate
 Content-Type: application/json
 
 {
-  "herDescription": "She's mid-50s, plays tennis, just got back from Aspen.",
+  "guestDescription": "Mid-50s, plays tennis, just got back from Aspen.",
   "when": "Saturday night",
   "vibe": "relaxed",                    // one of the 4 enum values
   "budget": "comfortable",              // one of the 3 enum values
@@ -425,8 +425,8 @@ The route forces the tool call with `tool_choice: { type: "tool", name: "present
 
 `buildSystemPrompt(venues, archetypes)` produces a single prompt with these sections (in order):
 
-1. **Identity.** "You are Encore, a date concierge for older men in West Palm Beach."
-2. **Voice.** Savvy older friend, dry, specific, never a chatbot. New Yorker columnist who got into the concierge business. Audience is 50+ men with money.
+1. **Identity.** "You are Encore, a date concierge in West Palm Beach."
+2. **Voice.** Savvy older friend, dry, specific, never a chatbot. New Yorker columnist who got into the concierge business. Clients are 50+ with money. Pronouns mirror the brief; neutral when the brief gives none.
 3. **Forbidden words.** Curated, tailored, personalized, elevated experience, crafted, handpicked, perfect for, perhaps, maybe, em dashes, emoji, AI-startup register, "I'm here to help," "let me," etc.
 4. **Ground truth.** The seed `venues` (~30) and `archetypes` (8) arrays inlined as JSON. The model may only reference these ids.
 5. **The job.** Pick three DISTINCT archetypes; instantiate each by selecting venues that match the archetype's stage shape.
@@ -444,7 +444,7 @@ When the first response either (a) returns fewer than three valid packages after
 
 ### Why so many examples in the prompt
 
-The conversation starters and narrative fields are **the magic moment** of the demo (per `SETUP.md`). Without good/bad examples, the model produces things like "Her travels: ask about Aspen." which read like coaching notes. With explicit examples ("What did you finish on the flight back?"), it produces sentences he'd actually say. The same pattern applies to narrative voice. If a future agent tunes the prompt and the magic-moment fields drift, the lever is to add or sharpen the examples.
+The conversation starters and narrative fields are **the magic moment** of the demo (per `SETUP.md`). Without good/bad examples, the model produces things like "Their travels: ask about Aspen." which read like coaching notes. With explicit examples ("What did you finish on the flight back?"), it produces sentences the client would actually say. The same pattern applies to narrative voice. If a future agent tunes the prompt and the magic-moment fields drift, the lever is to add or sharpen the examples.
 
 ### The hydration step
 
@@ -473,7 +473,7 @@ If the model returns a known id but the seed list has been reduced and the id no
 
 ### Length caps
 
-`herDescription`, `avoid` ≤ 2000 characters each. `when` ≤ 200. Below the API call. Belt-and-suspenders against pasting an entire essay into the brief or against malformed clients.
+`guestDescription`, `avoid` ≤ 2000 characters each. `when` ≤ 200. Below the API call. Belt-and-suspenders against pasting an entire essay into the brief or against malformed clients.
 
 ### What you should NOT do here
 
@@ -499,7 +499,7 @@ The voice is the most likely place this project goes off-brand. Treat `CLAUDE.md
 **Preferred:**
 - Specifics over adjectives. "Two glasses of Sancerre and a quiet table on the side patio" beats "a romantic evening."
 - Imperative CTAs. "Plan the night." not "Click here to plan your night."
-- Light, dry, never cute. The audience is 50+ men with money. Treat them like adults.
+- Light, dry, never cute. The audience is 50+ adults with money. Treat them like adults.
 
 When you write copy, the test is: *would this line appear in any AI-startup demo?* If yes, rewrite.
 
@@ -711,7 +711,7 @@ curl -s https://encore-mocha-ten.vercel.app | grep -oE "Plan a night[^<]*"
 # Verify API graceful error path (when no key is set)
 curl -s -X POST https://encore-mocha-ten.vercel.app/api/curate \
   -H "Content-Type: application/json" \
-  -d '{"herDescription":"test","when":"Saturday","vibe":"relaxed","budget":"comfortable"}'
+  -d '{"guestDescription":"test","when":"Saturday","vibe":"relaxed","budget":"comfortable"}'
 ```
 
 The expected error body when no key is set:
@@ -877,7 +877,7 @@ Why-this-not-that for the choices an agent might second-guess.
 - **Cormorant Garamond + Inter, both via `next/font/google`.** Self-hosted by Next, no external CDN at runtime. Letter-spacing and weight pinned in `app/layout.tsx` font config.
 - **Brass focus ring everywhere.** One global rule beats per-element fiddling. Keyboard users get a consistent affordance.
 - **`document.title` updated client-side on `/package/[id]`.** Because the page is a client component reading sessionStorage, server-side `generateMetadata` can't access the package. Updating the title in the load effect is the workaround. If/when packages move to a server-side store, switch to `generateMetadata`.
-- **Length caps on free-text inputs.** 2000 chars on `herDescription` and `avoid`, 200 on `when`. Defends against pasting essays into the brief and keeps prompt-injection windows narrow.
+- **Length caps on free-text inputs.** 2000 chars on `guestDescription` and `avoid`, 200 on `when`. Defends against pasting essays into the brief and keeps prompt-injection windows narrow.
 - **`react-hooks/set-state-in-effect` disabled for `app/**/*.tsx`.** The legitimate sessionStorage→state pattern triggers it. Documented in FOLLOWUPS.md.
 - **No tests.** Demo. Manual exercise on the deployed URL is the verification. If this becomes a real product, integration tests around `/api/curate` (hitting Anthropic with a recorded brief) are the highest-value first step.
 - **v2: Venue + Archetype + Stage instead of Restaurant + Experience.** v1 collapsed any non-restaurant into "experience." v2 unifies under `Venue` with a `category` field so the model can mix categories per stage (e.g., a `walk` stage at a `garden`-category venue). Archetypes become the structural variety lever — the magic of v2 is "three structurally different evenings," not three differently-flavored dinners.
@@ -900,7 +900,7 @@ Internal terminology used in code and prompts.
 - **Signal** — the 2–4 word phrase a package communicates. Distilled from the archetype's signal but tuned per date. Renders as a brass-bordered pill on the results card and detail hero.
 - **Transition** — the one-line note between two stages explaining how to move from one to the next. Optional. Where pacing shows up.
 - **Narrative** — the 3–5 sentence arc-of-the-evening paragraph. Lives on `Package.narrative`.
-- **Conversation starter** — a complete sentence or question he could say out loud to her, calibrated to her description. Two per package.
+- **Conversation starter** — a complete sentence or question the client could say out loud to the guest, calibrated to the guest's description. Two per package.
 - **Don't bring up** — one tasteful skip per package. Subtle aside, never preachy.
 - **Concierge fee** — a 7% surcharge disclosed on the detail page and confirm page. The product's monetization seed; surfaced as one neutral muted line, not a sales pitch.
 - **Hydration** — the server-side step in `/api/curate` that turns model-returned ids into full `Venue` objects nested inside each `PackageStage`. Drops any package whose stage references an unknown `venueId`.

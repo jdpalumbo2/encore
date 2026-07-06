@@ -33,7 +33,7 @@ export default function ResultsPage() {
       }
     }
 
-    const intakeRaw = sessionStorage.getItem("encore.intake.v2");
+    const intakeRaw = sessionStorage.getItem("encore.intake.v3");
     if (!intakeRaw) {
       setHasIntake(false);
       setLoading(false);
@@ -131,7 +131,7 @@ export default function ResultsPage() {
           Three different reads on the night.
         </h1>
         <p className="font-sans text-base sm:text-lg text-text-muted mt-3 max-w-[560px] leading-relaxed">
-          Pick one to see the full sequence: rooms, pacing, what to ask her about.
+          Pick one to see the full sequence: rooms, pacing, what to ask them about.
         </p>
       </div>
 

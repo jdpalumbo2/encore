@@ -13,7 +13,7 @@ type Budget = IntakeAnswers["budget"];
 const VIBE_OPTIONS: { value: Vibe; label: string; sub: string }[] = [
   { value: "relaxed", label: "Relaxed dinner", sub: "Easy night, three courses, home before eleven." },
   { value: "special", label: "Special occasion", sub: "There's a reason on the calendar." },
-  { value: "adventurous", label: "Adventurous", sub: "Something she'll tell her friends about." },
+  { value: "adventurous", label: "Adventurous", sub: "Something they'll tell their friends about." },
   { value: "classic", label: "Classic", sub: "Old-world. By the book, in the best sense." },
 ];
 
@@ -29,7 +29,7 @@ export default function PlanPage() {
   const [pending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
 
-  const [herDescription, setHerDescription] = useState("");
+  const [guestDescription, setGuestDescription] = useState("");
   const [when, setWhen] = useState("");
   const [vibe, setVibe] = useState<Vibe | null>(null);
   const [budget, setBudget] = useState<Budget | null>(null);
@@ -44,7 +44,7 @@ export default function PlanPage() {
 
   const total = 5;
   const canAdvance =
-    (step === 1 && herDescription.trim().length > 3) ||
+    (step === 1 && guestDescription.trim().length > 3) ||
     (step === 2 && when.trim().length > 0) ||
     (step === 3 && vibe !== null) ||
     (step === 4 && budget !== null) ||
@@ -61,7 +61,7 @@ export default function PlanPage() {
   const submit = () => {
     if (!vibe || !budget) return;
     const answers: IntakeAnswers = {
-      herDescription: herDescription.trim(),
+      guestDescription: guestDescription.trim(),
       when: when.trim(),
       vibe,
       budget,
@@ -69,7 +69,7 @@ export default function PlanPage() {
     };
     setSubmitting(true);
     track("brief.submitted", { vibe, budget });
-    sessionStorage.setItem("encore.intake.v2", JSON.stringify(answers));
+    sessionStorage.setItem("encore.intake.v3", JSON.stringify(answers));
     sessionStorage.removeItem("encore.packages.v2");
     router.push("/results");
   };
@@ -118,15 +118,15 @@ export default function PlanPage() {
       >
         {step === 1 && (
           <Step
-            lead="Tell us about her."
-            sub="A few lines is plenty. The more specific, the better the night."
+            lead="Tell us about your guest."
+            sub="What are they like? What makes them happy? What do they enjoy, or used to? The more specific, the better the night."
           >
             <textarea
               autoFocus
-              value={herDescription}
-              onChange={(e) => setHerDescription(e.target.value)}
-              placeholder="She's mid-50s, plays tennis, just got back from Aspen. Reads a lot of fiction. Doesn't drink red."
-              aria-label="Tell us about her"
+              value={guestDescription}
+              onChange={(e) => setGuestDescription(e.target.value)}
+              placeholder="Mid-50s, plays tennis, just got back from Aspen. Reads a lot of fiction. Doesn't drink red."
+              aria-label="Tell us about your guest"
               className="w-full min-h-[160px] bg-background border border-hairline px-4 py-3 font-sans text-base text-text placeholder:text-text-muted/70 focus:outline-none focus:border-primary transition-colors resize-none rounded-sm"
             />
           </Step>
@@ -212,7 +212,7 @@ export default function PlanPage() {
         {step === 5 && (
           <Step
             lead="Anything to avoid?"
-            sub="Optional. Dietary stuff, mobility, things she doesn't want to talk about."
+            sub="Optional. Dietary stuff, mobility, things they don't want to talk about."
           >
             <textarea
               autoFocus

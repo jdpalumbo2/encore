@@ -237,7 +237,7 @@ async function persistTelemetry(args: PersistArgs) {
       .insert(briefs)
       .values({
         sessionId: args.sessionId,
-        herDescription: args.answers.herDescription,
+        guestDescription: args.answers.guestDescription,
         whenText: args.answers.when,
         vibe: args.answers.vibe,
         budget: args.answers.budget,
@@ -328,7 +328,7 @@ export async function POST(req: Request) {
   }
 
   if (
-    !answers?.herDescription ||
+    !answers?.guestDescription ||
     !answers?.when ||
     !answers?.vibe ||
     !answers?.budget
@@ -337,7 +337,7 @@ export async function POST(req: Request) {
   }
 
   if (
-    answers.herDescription.length > 2000 ||
+    answers.guestDescription.length > 2000 ||
     (answers.avoid?.length ?? 0) > 2000
   ) {
     return jsonError(400, "The brief is too long. Trim it back.");

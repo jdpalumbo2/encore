@@ -34,7 +34,7 @@ function ConfirmInner() {
         return;
       }
       let when = "";
-      const rawIntake = sessionStorage.getItem("encore.intake.v2");
+      const rawIntake = sessionStorage.getItem("encore.intake.v3");
       if (rawIntake) {
         try {
           const intake = JSON.parse(rawIntake) as { when?: string };

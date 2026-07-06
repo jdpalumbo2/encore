@@ -17,7 +17,7 @@ interface CardRow {
   notes: string | null;
   archetypeName: string;
   whenText: string;
-  herDescription: string;
+  guestDescription: string;
   vibe: string;
   budget: string;
   firstVenueName: string | null;
@@ -42,7 +42,7 @@ async function fetchBookings(): Promise<CardRow[]> {
       archetypeName: packages.archetypeName,
       payload: packages.payload,
       whenText: briefs.whenText,
-      herDescription: briefs.herDescription,
+      guestDescription: briefs.guestDescription,
       vibe: briefs.vibe,
       budget: briefs.budget,
     })
@@ -62,7 +62,7 @@ async function fetchBookings(): Promise<CardRow[]> {
       notes: r.notes,
       archetypeName: r.archetypeName,
       whenText: r.whenText,
-      herDescription: r.herDescription,
+      guestDescription: r.guestDescription,
       vibe: r.vibe,
       budget: r.budget,
       firstVenueName: firstVenue,
@@ -108,7 +108,7 @@ function Card({ b }: { b: CardRow }) {
         {b.whenText} · {b.vibe} · {b.budget}
       </p>
       <p className="font-sans text-[15px] text-text leading-relaxed">
-        {truncate(b.herDescription, 140)}
+        {truncate(b.guestDescription, 140)}
       </p>
 
       {b.notes && (

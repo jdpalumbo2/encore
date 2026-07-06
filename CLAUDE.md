@@ -4,19 +4,21 @@ Project conventions for Encore. Read this before doing anything. Reread it when 
 
 ## Project
 
-Encore is a curated date concierge for older men in West Palm Beach. This repo is the demo MVP a stakeholder will poke at to see whether the concept works. It is not production. It is not a prototype that has to scale. It is a tight, polished, end-to-end walk-through of the product experience.
+Encore is a curated date concierge for older adults in West Palm Beach. This repo is the demo MVP a stakeholder will poke at to see whether the concept works. It is not production. It is not a prototype that has to scale. It is a tight, polished, end-to-end walk-through of the product experience.
 
-The user describes a date scenario (who she is, when, what kind of evening), gets three curated package options, picks one, sees a full evening with restaurant + optional add-on + conversation primers + logistics, and mock-confirms a booking.
+The user describes a date scenario (who the guest is, when, what kind of evening), gets three curated package options, picks one, sees a full evening with restaurant + optional add-on + conversation primers + logistics, and mock-confirms a booking.
 
 There is no real Stripe, no auth, no database. State lives in React and URL params.
 
 ## Audience
 
-Primary: men aged 50 and up in West Palm Beach. Divorced, widowed, or otherwise returning to dating after a long absence. Have money, have time, lack the social muscle memory for the modern restaurant scene. The voice locks on this audience and stays there. Every copy decision answers to them.
+Primary: adults aged 50 and up in West Palm Beach, any gender. Divorced, widowed, or otherwise returning to dating after a long absence. Have money, have time, lack the social muscle memory for the modern restaurant scene. The voice locks on this audience and stays there. Every copy decision answers to them.
 
-Secondary: busy professionals in their thirties and forties planning a meaningful night for a partner, a wife, or a woman they want to impress. We do not address this audience separately. We expect them to find the product on their own and translate the register without help.
+Secondary: busy professionals in their thirties and forties planning a meaningful night for a partner, a spouse, or someone they want to impress. We do not address this audience separately. We expect them to find the product on their own and translate the register without help.
 
 We do not target college-age daters, casual swipers, or out-of-town tourists. Encore is for the person who already has the relationship or the night and needs the curation.
+
+The product never assumes anyone's gender. Copy refers to "your guest" or uses "they." The curation prompt mirrors whatever pronouns the client uses in the brief and defaults to neutral when none are given. The intake field, database column, and prompt all say "guest," never "her."
 
 ## Product philosophy
 
@@ -105,7 +107,7 @@ The product speaks like a savvy older friend who happens to know the city. Confi
 **Preferred:**
 - Specifics over adjectives. "Two glasses of Sancerre and a quiet table on the side patio" beats "a romantic evening."
 - Imperative CTAs. "Plan the night." not "Click here to plan your night."
-- Light, dry, never cute. The audience is 50+ men with money. Treat them like adults.
+- Light, dry, never cute. The audience is 50+ adults with money. Treat them like adults.
 
 ## Visual identity
 

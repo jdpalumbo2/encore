@@ -31,7 +31,7 @@ Stage blocks, transition notes, and the shape strip use single-column layouts an
 Specific to the round-1 admin scaffold:
 
 - **No `/api/track` rate limit beyond size + allowlist.** A bored attacker could still flood `events` with valid event names. Add Upstash + token-bucket if traffic justifies it.
-- **PII in `briefs.her_description` is verbatim.** Admin Basic Auth is the only access control. Decide before sharing the dashboard with anyone outside Rob whether to truncate, anonymize, or move into a separate stricter table.
+- **PII in `briefs.guest_description` is verbatim.** Admin Basic Auth is the only access control. Decide before sharing the dashboard with anyone outside Rob whether to truncate, anonymize, or move into a separate stricter table.
 - **Funnel doesn't deduplicate same-session repeated briefs.** A session that submits 3 briefs in a row counts as 1 session reaching `brief.submitted` (correct), but if you wanted "brief submission rate per session" the math is fine; if you wanted "% of *brief submissions* that became picks" the funnel SQL needs reshaping.
 - **Heatmap window is hardcoded to 30 days.** Add a date-range selector if Rob wants to scope.
 - **Bookings Kanban has no drag-and-drop.** Status advances via buttons. Drag would need `dnd-kit` or similar; not worth round-1 weight.
@@ -48,7 +48,7 @@ Bumping to `.v2` keys means a user with v1 in their sessionStorage just re-fetch
 
 ## Day-of-week awareness is only a prompt nudge
 
-The system prompt asks the model to weave practical day-of-week lines into `why` or `transition` copy when relevant. There's no structured `dayOfWeek` field on `IntakeAnswers` or on venues, so the model is inferring from her brief's "when" string. If this drifts (e.g., the model says "Norton has Thursday hours" when the user said Saturday), tighten the prompt or pre-parse the `when` field server-side and inject a structured day-of-week into the user prompt.
+The system prompt asks the model to weave practical day-of-week lines into `why` or `transition` copy when relevant. There's no structured `dayOfWeek` field on `IntakeAnswers` or on venues, so the model is inferring from the brief's "when" string. If this drifts (e.g., the model says "Norton has Thursday hours" when the user said Saturday), tighten the prompt or pre-parse the `when` field server-side and inject a structured day-of-week into the user prompt.
 
 ## Prompt tokens per request
 
