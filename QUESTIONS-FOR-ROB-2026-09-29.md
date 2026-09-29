@@ -2,9 +2,9 @@
 
 The dinner questionnaire Johnny promised Rob on the 2026-09-29 Zoom. One email, fifteen questions, about 30 to 45 minutes of Rob's time. Rob said he would answer by Wispr Flow, that night or soon after.
 
-The build waits on the answers. Sources: the call recording (Fireflies archive, "Rob Call 9-29"), Rob's texts of 2026-09-22 to 2026-09-28, and his email of 2026-09-15 ("Change documentation. Encore.") with four attachments, including the StartEngine deck.
+The build waits on the answers. Sources: the call recording (Fireflies archive, "Rob Call 9-29"), Rob's texts of 2026-09-22 to 2026-09-28, and his email of 2026-09-15 ("Change documentation. Encore.") with four attachments, including the StartEngine deck. Copies of those documents: `~/assets/business/encore/from-rob-2026-09-15/`.
 
-**Where the draft is:** saved on 2026-09-29 as a draft in the johnny@simplifytech.ai mailbox, addressed to rbailey@trustedadvisory.com, the address Rob writes from. Not sent.
+**Sent:** by Johnny on 2026-09-29 at 17:07 CDT from johnny@simplifytech.ai to rbailey@trustedadvisory.com, the address Rob writes from.
 
 ---
 
@@ -81,6 +81,6 @@ Rob's email of 2026-09-15 carried four documents. Two of them conflict with the 
 
 - **Encore Value Flow:** the deposit, "a fee to bundle the reservation itself", is "on hold, not gone". The current model "bundles by subscription".
 - **ENCORE StartEngine deck (14 slides):** for restaurants, "free entry, no commission". Stage one of the business model is "both sides free". The member "books directly".
-- **What is the important mission of encore:** "We are moving to a membership model." Restaurant tiers at about $149 a month (Standard) and $339 a month (Elite), with a 60-day free trial.
+- **What is the important mission of encore:** "We are moving to a membership model." Restaurant tiers: Standard $79 a month (an earlier page of the same document says about $149), Preferred $199, Elite $339, with a 60-day free trial.
 
 The call's $15 per booking brings back the mechanic those documents put on hold. Question 7 asks Rob to confirm which one governs the first 20 guests.
