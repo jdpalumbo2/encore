@@ -2,7 +2,9 @@
 
 The dinner questionnaire Johnny promised Rob on the 2026-09-29 Zoom. One email, fifteen questions, about 30 to 45 minutes of Rob's time. Rob said he would answer by Wispr Flow, that night or soon after.
 
-The build waits on the answers. Source for every line below: the call recording (Fireflies archive, "Rob Call 9-29") and Rob's texts of 2026-09-22 to 2026-09-28.
+The build waits on the answers. Sources: the call recording (Fireflies archive, "Rob Call 9-29"), Rob's texts of 2026-09-22 to 2026-09-28, and his email of 2026-09-15 ("Change documentation. Encore.") with four attachments, including the StartEngine deck.
+
+**Where the draft is:** saved on 2026-09-29 as a draft in the johnny@simplifytech.ai mailbox, addressed to rbailey@trustedadvisory.com, the address Rob writes from. Not sent.
 
 ---
 
@@ -38,14 +40,14 @@ The build waits on the answers. Source for every line below: the call recording 
 >
 > **The $15**
 >
-> 7. How will you charge it by hand? A Stripe payment link you email after you confirm, a Stripe invoice, or something else? Is the Encore Stripe account live, or still in sandbox?
-> 8. This is the line the guest agrees to before sending the request. Edit it as you like: "Encore charges a $15 fee once your reservation is confirmed. You will not be charged before then. You pay the restaurant for your meal." And if the guest cancels after you confirm, do they get the $15 back?
-> 9. If the restaurant cannot take the time the guest asked for, what do you do? Offer another time, or offer another of the three restaurants?
+> 7. Your September 15 documents put the per-booking fee on hold and moved to membership, and the StartEngine deck says free entry with no commission. Today we agreed on $15 per booking. For these first 20 guests, is the $15 the plan, with membership to follow? I want the build and the deck to say the same thing.
+> 8. How will you charge it by hand? A Stripe payment link you email after you confirm, a Stripe invoice, or something else? Is the Encore Stripe account live, or still in sandbox?
+> 9. This is the line the guest agrees to before sending the request. Edit it as you like: "Encore charges a $15 fee once your reservation is confirmed. You will not be charged before then. You pay the restaurant for your meal." And if the guest cancels after you confirm, do they get the $15 back?
+> 10. If the restaurant cannot take the time the guest asked for, what do you do? Offer another time, or another of the three restaurants?
 >
 > **What the guest gets**
 >
-> 10. You called it a goodie bag. What is in it for the first dinners? I can carry over the conversation cues from the current app. You mentioned a note on the restaurant's history. Who writes that?
-> 11. Who sends the confirmation and the next-morning check-in? You, by hand, from your own email? Or the system? If the system, which address should it send from?
+> 11. You called it a goodie bag. What is in it for the first dinners? I can carry over the conversation cues from the current app. You mentioned a note on the restaurant's history. Who writes that? And who sends the confirmation and the next-morning check-in: you, by hand, from your own email, or the system?
 >
 > **The site**
 >
@@ -58,7 +60,7 @@ The build waits on the answers. Source for every line below: the call recording 
 >
 > **Housekeeping**
 >
-> 15. Four small things. Which email address should I add to the Vercel project? Send the StartEngine deck when it is ready for input. On 09-16 you asked about documents you had sent me: which ones, and can you resend them? And what is the name of the dinner company behind the Happiness Club and Wall Street South evenings, and do you need anything built for those?
+> 15. Three small things. Which email address should I add to the Vercel project? Is the StartEngine deck from September 15 still the current one, or is there a newer version I should read? And what is the name of the dinner company behind the Happiness Club and Wall Street South evenings, and do you need anything built for those?
 >
 > As you set up the first dinners, keep a running list of what takes you the most time by hand. That list decides what I build next.
 >
@@ -72,3 +74,13 @@ The build waits on the answers. Source for every line below: the call recording 
 - When Rob answers, paste his answers word for word into `ROB-ANSWERS.md` at the repo root. Anything he volunteers beyond the fifteen goes under a "Bonus" heading.
 - If Rob picks something that pushes the build past one day, that item goes on the later list. It does not go into this week's build.
 - Questions 1, 4, 6, 7 and 8 are the ones the build cannot start without. The rest can trail by a day.
+
+## Why question 7 exists
+
+Rob's email of 2026-09-15 carried four documents. Two of them conflict with the $15 agreed on the call two weeks later:
+
+- **Encore Value Flow:** the deposit, "a fee to bundle the reservation itself", is "on hold, not gone". The current model "bundles by subscription".
+- **ENCORE StartEngine deck (14 slides):** for restaurants, "free entry, no commission". Stage one of the business model is "both sides free". The member "books directly".
+- **What is the important mission of encore:** "We are moving to a membership model." Restaurant tiers at about $149 a month (Standard) and $339 a month (Elite), with a 60-day free trial.
+
+The call's $15 per booking brings back the mechanic those documents put on hold. Question 7 asks Rob to confirm which one governs the first 20 guests.
