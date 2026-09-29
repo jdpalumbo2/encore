@@ -10,6 +10,22 @@ The user describes a date scenario (who the guest is, when, what kind of evening
 
 There is no real Stripe, no auth, no database. State lives in React and URL params.
 
+## Current direction (2026-09-29)
+
+Read this section first. Where it conflicts with a section below, this one wins until the dinner build plan replaces it.
+
+**The frame.** Rob has not paid for this work. It is help to prove the concept. Johnny builds one narrow MVP at a time, sized at a day or less, from a written spec. Rob's wider list of ideas is not a backlog. Nothing gets built from a call alone.
+
+**The MVP, agreed on the 2026-09-29 call.** Three dinner packages at three Palm Beach restaurants replace the current demo. A guest picks one, fills in a short request form, and agrees to a $15 fee. Rob receives the request, phones the restaurant, books the table by hand, and confirms with the guest within 24 hours. The $15 is flat for a party of two to six and is charged only after the reservation is confirmed. The guest pays the restaurant for the meal. Rob does this by hand for the first 20 guests to get numbers he can take to the restaurants.
+
+**What stays manual.** The restaurant booking, the confirmation, and the $15 charge. No Stripe code in this build.
+
+**What the build waits on.** Rob's answers to `QUESTIONS-FOR-ROB-2026-09-29.md`, recorded in `ROB-ANSWERS.md`. The three restaurants are placeholders until Rob names them.
+
+**Parked, by agreement on the call.** A member and venue database, a custom CRM (Rob keeps Pipedrive), member login, the Tampa-St. Pete and Miami city switch, reservation-system integrations (OpenTable, Toast, Resy), and the executive-assistant version of Encore.
+
+**Sections below that this changes.** "What not to do" and "Stack" say no database and a mock booking. The app has had a Postgres database since the admin dashboard shipped, and the dinner flow stores real contact details. The build plan settles those rules before any code is written.
+
 ## Audience
 
 Primary: adults aged 50 and up in West Palm Beach, any gender. Divorced, widowed, or otherwise returning to dating after a long absence. Have money, have time, lack the social muscle memory for the modern restaurant scene. The voice locks on this audience and stays there. Every copy decision answers to them.
