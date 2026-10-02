@@ -171,11 +171,11 @@ Page 4 of the document, after Johnny's sign-off, in Rob's words. The headings ar
 
 ## Not answered in this reply
 
-Johnny's index, not Rob's words. These go into the one round of follow-up questions (PER-56).
+Johnny's index, not Rob's words. Johnny ruled on 2026-10-01 that none of these needs a follow-up before the build. The $15 per booking was settled on the 2026-09-29 call and Rob confirmed it here ("Check" on summary item 4, and he kept the $15 consent line). The dinners have no after-dinner stop.
 
 - Q1: his contact at each restaurant, and whether each said yes, maybe, or was not asked.
-- Q2: what kind of evening each restaurant suits, and where the guest goes afterward.
-- Q7: whether the $15 per booking governs the first 20 guests, with membership to follow.
+- Q2: what kind of evening each restaurant suits.
+- Q7: not a gap. The $15 per booking stands (see above); the deck is Rob's to align.
 - Q8: how he charges the $15 by hand (payment link, invoice, other).
 - Q10: what happens when the restaurant cannot take the requested time.
 - Q11: what the goodie bag holds, and who writes the restaurant history note.
